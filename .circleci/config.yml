@@ -16,16 +16,28 @@ jobs:
     parameters:
       architecture:
         type: string
-      qbittorrent_version:
-        type: string
     executor: docker
     environment:
-      ARCHITECTURE: << parameters.architecture >>
+      ALPINE_ARCHITECTURE: << parameters.architecture >>
+      ALPINE_VERSION: 3.9
+      LIBTORRENT_VERSION: 1.1.*
+      QBITTORRENT_VERSION: 4.1.5
       DOCKER_REPO: qbittorrent-nox
-      QBITTORRENT_VERSION: << parameters.qbittorrent_version >>
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Setup environment variables
+          command: |
+            echo "export LIBTORRENT_VERSION=$( curl --silent https://api.github.com/repos/arvidn/libtorrent/git/refs/tags       | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort -Vr | grep "${LIBTORRENT_VERSION}"  | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> $BASH_ENV
+            echo "export QBITTORRENT_VERSION=$(curl --silent https://api.github.com/repos/qbittorrent/qBittorrent/git/refs/tags | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort -Vr | grep "${QBITTORRENT_VERSION}" | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          name: Echo and quit
+          command: |
+            echo ${LIBTORRENT_VERSION}
+            echo ${QBITTORRENT_VERSION}
+            exit 1
       - run:
           name: Install dependencies
           command: |
@@ -45,6 +57,8 @@ jobs:
           command: |
             docker build --cache-from=app \
               --build-arg ARCHITECTURE=${ARCHITECTURE} \
+              --build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+              --build-arg LIBTORRENT_VERSION=${LIBTORRENT_VERSION} \
               --build-arg QBITTORRENT_VERSION=${QBITTORRENT_VERSION} \
               --tag ${DOCKER_REPO}:${ARCHITECTURE}-${QBITTORRENT_VERSION} .
       - run:
@@ -63,4 +77,3 @@ workflows:
     jobs:
       - build:
           architecture: amd64
-          qbittorrent_version: 4.1.5
