@@ -3,6 +3,7 @@
 #     https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-shell-command
 #   Building Docker images:
 #     https://circleci.com/blog/how-to-build-a-docker-image-on-circleci-2-0/
+#     https://circleci.com/blog/using-circleci-workflows-to-replicate-docker-hub-automated-builds/
 #   Cross-compilimg:
 #     https://github.com/bubuntux/nordvpn/tree/master/hooks
 
@@ -24,7 +25,7 @@ jobs:
       ALPINE_VERSION: 3.9
       _LIBTORRENT_VERSION: 1.1.*
       _QBITTORRENT_VERSION: 4.1.*
-      DOCKER_REPO: qbittorrent-nox
+      IMAGE_NAME: emmercm/qbittorrent-nox
     steps:
       - checkout
       - setup_remote_docker
@@ -44,11 +45,11 @@ jobs:
           keys:
             - v1-{{ .Branch }}
           paths:
-            - /caches/app.tar
+            - images.tar
       - run:
           name: Load Docker image layer cache
           command: |
-            docker load -i /caches/app.tar || true
+            docker load --input images.tar || true
       - run:
           name: Build application Docker image
           command: |
@@ -58,16 +59,21 @@ jobs:
               --build-arg ALPINE_VERSION=${ALPINE_VERSION} \
               --build-arg LIBTORRENT_VERSION=${LIBTORRENT_VERSION} \
               --build-arg QBITTORRENT_VERSION=${QBITTORRENT_VERSION} \
-              --tag ${DOCKER_REPO}:${ARCHITECTURE}-${QBITTORRENT_VERSION} .
+              --tag ${IMAGE_NAME}:${QBITTORRENT_VERSION} .
       - run:
           name: Save Docker image layer cache
           command: |
+            source ${BASH_ENV}
             mkdir -p /caches
-            docker save -o /caches/app.tar app
+            docker save --output images.tar ${IMAGE_NAME}
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
-            - /caches/app.tar
+            - images.tar
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images.tar
 
 workflows:
   version: 2.1
