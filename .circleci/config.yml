@@ -30,10 +30,10 @@ jobs:
           name: Setup environment variables
           command: |
             set -euo pipefail
-            apk add --no-cache curl jq
+            apk add --no-cache coreutils curl jq
             cat ~/.profile || true
-            echo "export LIBTORRENT_VERSION=$( curl --silent https://api.github.com/repos/arvidn/libtorrent/git/refs/tags       | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort -vr | grep "${_LIBTORRENT_VERSION}"  | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> ~/.profile
-            echo "export QBITTORRENT_VERSION=$(curl --silent https://api.github.com/repos/qbittorrent/qBittorrent/git/refs/tags | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort -vr | grep "${_QBITTORRENT_VERSION}" | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> ~/.profile
+            echo "export LIBTORRENT_VERSION=$( curl --silent https://api.github.com/repos/arvidn/libtorrent/git/refs/tags       | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort -Vr | grep "${_LIBTORRENT_VERSION}"  | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> ~/.profile
+            echo "export QBITTORRENT_VERSION=$(curl --silent https://api.github.com/repos/qbittorrent/qBittorrent/git/refs/tags | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort -Vr | grep "${_QBITTORRENT_VERSION}" | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> ~/.profile
             cat ~/.profile || true
       - run:
           name: Echo and quit
