@@ -1,0 +1,10 @@
+# Repo strucutre
+.circleci/
+.git/
+*.md
+
+# Attached folders
+config/
+downloads/
+incomplete
+torrents/
