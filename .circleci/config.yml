@@ -31,11 +31,10 @@ jobs:
           command: |
             set -euo pipefail
             apk add --no-cache coreutils curl jq
-            echo ${BASH_ENV}
-            echo "export LIBTORRENT_VERSION=$( curl --silent https://api.github.com/repos/arvidn/libtorrent/git/refs/tags       | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort --version-sort --reverse | grep "${_LIBTORRENT_VERSION}"  | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> ${BASH_ENV}
-            echo "export QBITTORRENT_VERSION=$(curl --silent https://api.github.com/repos/qbittorrent/qBittorrent/git/refs/tags | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort --version-sort --reverse | grep "${_QBITTORRENT_VERSION}" | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> ${BASH_ENV}
-            cat ${BASH_ENV}
-            source ${BASH_ENV}
+            echo "export LIBTORRENT_VERSION=$( curl --silent https://api.github.com/repos/arvidn/libtorrent/git/refs/tags       | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort --version-sort --reverse | grep "${_LIBTORRENT_VERSION}"  | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> ~/.profile
+            echo "export QBITTORRENT_VERSION=$(curl --silent https://api.github.com/repos/qbittorrent/qBittorrent/git/refs/tags | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort --version-sort --reverse | grep "${_QBITTORRENT_VERSION}" | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> ~/.profile
+            cat ~/.profile
+            source ~/.profile
             echo ${LIBTORRENT_VERSION}
             echo ${QBITTORRENT_VERSION}
       - run:
