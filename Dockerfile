@@ -59,7 +59,7 @@ RUN set -euo pipefail && \
     mkdir -p ~/.local/share/data/qBittorrent && \
     mkdir /downloads && \
     mkdir /incomplete && \
-    ln -s ~/.config/qBittorrent /config && \
+    ln -s ~/.config/qBittorrent /config
 COPY qBittorrent.conf /config/qBittorrent.conf.default
 VOLUME ["/config", "/downloads", "/incomplete"]
 EXPOSE 8080 6881/tcp 6881/udp
