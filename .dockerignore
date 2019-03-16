@@ -8,3 +8,6 @@ config/
 downloads/
 incomplete
 torrents/
+
+# Extras
+docker-compose.yml
