@@ -20,8 +20,8 @@ jobs:
     environment:
       ALPINE_ARCHITECTURE: << parameters.architecture >>
       ALPINE_VERSION: 3.9
-      LIBTORRENT_VERSION: 1.1.*
-      QBITTORRENT_VERSION: 4.1.*
+      _LIBTORRENT_VERSION: 1.1.*
+      _QBITTORRENT_VERSION: 4.1.*
       DOCKER_REPO: qbittorrent-nox
     steps:
       - checkout
@@ -31,8 +31,8 @@ jobs:
           command: |
             set -euo pipefail
             apk add --no-cache curl jq
-            echo "export LIBTORRENT_VERSION=$( curl --silent https://api.github.com/repos/arvidn/libtorrent/git/refs/tags       | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort -nr | grep "${LIBTORRENT_VERSION}"  | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> $BASH_ENV
-            echo "export QBITTORRENT_VERSION=$(curl --silent https://api.github.com/repos/qbittorrent/qBittorrent/git/refs/tags | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort -nr | grep "${QBITTORRENT_VERSION}" | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> $BASH_ENV
+            echo "export LIBTORRENT_VERSION=$( curl --silent https://api.github.com/repos/arvidn/libtorrent/git/refs/tags       | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort -nr | grep "${_LIBTORRENT_VERSION}"  | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> $BASH_ENV
+            echo "export QBITTORRENT_VERSION=$(curl --silent https://api.github.com/repos/qbittorrent/qBittorrent/git/refs/tags | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort -nr | grep "${_QBITTORRENT_VERSION}" | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> $BASH_ENV
             source $BASH_ENV
       - run:
           name: Echo and quit
