@@ -1,5 +1,7 @@
 # Useful links:
-#   Building Docker:
+#   Dynamic environment variables:
+#     https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-shell-command
+#   Building Docker images:
 #     https://circleci.com/blog/how-to-build-a-docker-image-on-circleci-2-0/
 #   Cross-compilimg:
 #     https://github.com/bubuntux/nordvpn/tree/master/hooks
@@ -18,7 +20,7 @@ jobs:
         type: string
     executor: docker
     environment:
-      ALPINE_ARCHITECTURE: << parameters.architecture >>
+      ARCHITECTURE: << parameters.architecture >>
       ALPINE_VERSION: 3.9
       _LIBTORRENT_VERSION: 1.1.*
       _QBITTORRENT_VERSION: 4.1.*
