@@ -63,7 +63,7 @@ jobs:
           name: Save Docker Image(s) to Cache
           command: |
             source ${BASH_ENV}
-            mkdir -p /caches
+            mkdir -p /cache
             docker save --output /cache/images.tar ${IMAGE_NAME}
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
