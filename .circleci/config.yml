@@ -30,14 +30,13 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Setup environment variables
+          name: Setup Environment Variables
           command: |
-            set -euo pipefail
             apk add --no-cache coreutils curl jq
             echo "export LIBTORRENT_VERSION=$( curl --silent https://api.github.com/repos/arvidn/libtorrent/git/refs/tags       | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort --version-sort --reverse | grep "${_LIBTORRENT_VERSION}"  | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> ${BASH_ENV}
             echo "export QBITTORRENT_VERSION=$(curl --silent https://api.github.com/repos/qbittorrent/qBittorrent/git/refs/tags | jq '.[] .ref' | sed 's/"//g' | sed 's/refs\/tags\///g' | sed 's/-/_/g' | sort --version-sort --reverse | grep "${_QBITTORRENT_VERSION}" | head -1 | sed -r "s/.*[^0-9]([0-9]+[^0-9][0-9]+[^0-9][0-9]+)$/\1/" | sed 's/_/./g')" >> ${BASH_ENV}
       - run:
-          name: Install dependencies
+          name: Install Dependencies
           command: |
             apk add --no-cache py-pip
             pip install docker-compose awscli
@@ -47,11 +46,11 @@ jobs:
           paths:
             - images.tar
       - run:
-          name: Load Docker image layer cache
+          name: Load Docker Image(s) from Cache
           command: |
             docker load --input images.tar || true
       - run:
-          name: Build application Docker image
+          name: Build Docker Image
           command: |
             source ${BASH_ENV}
             docker build --cache-from=app \
@@ -61,7 +60,7 @@ jobs:
               --build-arg QBITTORRENT_VERSION=${QBITTORRENT_VERSION} \
               --tag ${IMAGE_NAME}:${QBITTORRENT_VERSION} .
       - run:
-          name: Save Docker image layer cache
+          name: Save Docker Image(s) to Cache
           command: |
             source ${BASH_ENV}
             mkdir -p /caches
@@ -74,6 +73,21 @@ jobs:
           root: .
           paths:
             - images.tar
+
+  push:
+    executor: docker
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run:
+          name: Load Docker Image(s) from Cache
+          command: |
+            docker load --input images.tar || true
+      - run:
+          name: Publish Docker Image
+          command: |
+            docker image ls
 
 workflows:
   version: 2.1
