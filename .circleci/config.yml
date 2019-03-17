@@ -44,11 +44,11 @@ jobs:
           keys:
             - v1-{{ .Branch }}
           paths:
-            - images.tar
+            - /cache/images.tar
       - run:
           name: Load Docker Image(s) from Cache
           command: |
-            docker load --input images.tar || true
+            docker load --input /cache/images.tar || true
       - run:
           name: Build Docker Image
           command: |
@@ -64,13 +64,13 @@ jobs:
           command: |
             source ${BASH_ENV}
             mkdir -p /caches
-            docker save --output images.tar ${IMAGE_NAME}
+            docker save --output /cache/images.tar ${IMAGE_NAME}
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
-            - images.tar
+            - /cache/images.tar
       - persist_to_workspace:
-          root: .
+          root: /cache
           paths:
             - images.tar
 
@@ -78,12 +78,12 @@ jobs:
     executor: docker
     steps:
       - attach_workspace:
-          at: .
+          at: /cache
       - setup_remote_docker
       - run:
           name: Load Docker Image(s) from Cache
           command: |
-            docker load --input images.tar || true
+            docker load --input /cache/images.tar || true
       - run:
           name: Publish Docker Image
           command: |
