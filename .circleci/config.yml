@@ -136,13 +136,13 @@ workflows:
       - push:
           requires:
             - 4.1.*
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master
 
       - update-description:
           requires:
             - push
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master
