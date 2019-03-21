@@ -82,7 +82,9 @@ jobs:
       - run:
           name: Load Docker Image(s) from Cache
           command: |
-            docker load --input "${TAR}"
+            for TAR in $(ls -1 /cache/*.tar); do
+              docker load --input "${TAR}"
+            done
       - run:
           name: Publish Docker Image
           command: |
