@@ -69,6 +69,14 @@ jobs:
           paths:
             - "*"
 
+  test:
+    executor: docker
+    steps:
+      - run:
+          name: Test Docker Image(s)
+          command: |
+            echo ok
+
   push:
     executor: docker
     environment:
@@ -127,7 +135,7 @@ jobs:
 
 workflows:
   version: 2.1
-  build-push:
+  build-test-push:
     jobs:
       # https://github.com/qbittorrent/qBittorrent/releases
       - build:
@@ -145,12 +153,16 @@ workflows:
           base_image: emmercm/libtorrent:1.0-alpine
           version: 3.3.16
           tags: 3.3 3.3-alpine 3 3-alpine
-      
-      - push:
+
+      - test:
           requires:
             - 4.1.*
             - 4.0.*
             - 3.3.*
+      
+      - push:
+          requires:
+            - test
           filters:
             branches:
               only: master
