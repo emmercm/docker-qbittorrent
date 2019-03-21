@@ -1,13 +1,15 @@
 # Instructions on building qBittorrent:
-#   https://github.com/qbittorrent/qBittorrent/wiki/Compiling-qBittorrent-on-Debian-and-Ubuntu#libtorrent
-#   https://discourse.osmc.tv/t/howto-update-compile-qbittorrent-nox/19726/3
+#   https://github.com/qbittorrent/qBittorrent/wiki/Compiling-qBittorrent-on-Debian-and-Ubuntu#Compiling_qBittorrent_without_the_GUI_aka_qBittorrentnox_aka_headless
 #   https://github.com/qbittorrent/qBittorrent/wiki/Running-qBittorrent-without-X-server#compile-from-source---how-to-disable-qbittorrents-gui
+#   https://discourse.osmc.tv/t/howto-update-compile-qbittorrent-nox/19726/3
 
 ARG BASE_IMAGE=emmercm/libtorrent:latest
 
 FROM ${BASE_IMAGE}
 
 ARG VERSION=.
+
+COPY stacktrace.patch /
 
 # Build qbittorrent-nox
 RUN set -euo pipefail && \
@@ -21,6 +23,7 @@ RUN set -euo pipefail && \
     git checkout $(git tag --sort=-version:refname | grep "${VERSION}" | head -1) && \
     # Configure and make
     ./configure --disable-gui && \
+    cd src/app && (patch -i /stacktrace.patch || true) && rm /stacktrace.patch && cd ../.. && \
     make -j$(nproc) && \
     make install && \
     # Remove temp files

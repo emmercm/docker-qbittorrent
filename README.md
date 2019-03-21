@@ -1,5 +1,4 @@
-[![](https://images.microbadger.com/badges/version/emmercm/qbittorrent:4.1.5.svg)](https://hub.docker.com/r/emmercm/qbittorrent)
-[![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.1.5.svg)](https://hub.docker.com/r/emmercm/qbittorrent)
+[![](https://badgen.net/badge/emmercm/qbittorrent/blue?icon=docker)](https://hub.docker.com/r/emmercm/qbittorrent)
 [![](https://badgen.net/docker/pulls/emmercm/qbittorrent?icon=docker)](https://hub.docker.com/r/emmercm/qbittorrent)
 
 [![](https://badgen.net/badge/emmercm/docker-qbittorrent/purple?icon=github)](https://github.com/emmercm/docker-qbittorrent)
@@ -10,4 +9,7 @@ Unofficial headless qBittorrent images.
 
 # Supported tags
 
-- `4.1.5`, `4.1.5-alpine`, `4.1`, `4.1-alpine`, `4`, `4-alpine`, `latest`
+| Tags | Size / Layers |
+|-------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `4.1.5`, `4.1.5-alpine`, `4.1`, `4.1-alpine`, `4`, `4-alpine`, `latest` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.1.5.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.1.5 "Get your own image badge on microbadger.com") |
+| `4.0.4`, `4.0.4-alpine`, `4.0`, `4.0-alpine` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.0.4.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.0.4 "Get your own image badge on microbadger.com") |
