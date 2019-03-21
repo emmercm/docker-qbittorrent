@@ -9,7 +9,7 @@ FROM ${BASE_IMAGE}
 
 ARG VERSION=.
 
-COPY libexecinfo.patch /
+COPY stacktrace.patch /
 
 # Build qbittorrent-nox
 RUN set -euo pipefail && \
@@ -23,7 +23,7 @@ RUN set -euo pipefail && \
     git checkout $(git tag --sort=-version:refname | grep "${VERSION}" | head -1) && \
     # Configure and make
     ./configure --disable-gui && \
-    cd src/app && patch -i /libexecinfo.patch && rm /libexecinfo.patch && cd ../.. && \
+    cd src/app && (patch -i /stacktrace.patch || true) && rm /stacktrace.patch && cd ../.. && \
     make -j$(nproc) && \
     make install && \
     # Remove temp files
