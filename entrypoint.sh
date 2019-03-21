@@ -6,8 +6,9 @@ IP_URL=${IP_URL:-http://whatismyip.akamai.com}
 
 
 # Wait for internet connection
+# Note: can't use `ping` due to a known issue (https://forums.docker.com/t/ping-from-within-a-container-does-not-actually-ping/11787)
 echo "Waiting for internet connection ..."
-while ! ping -c 1 -n -w 1 "${PING_IP}" &> /dev/null; do
+while ! curl --silent --output /dev/null --max-time 1 ${PING_IP}; do
     sleep 1s
 done
 
