@@ -38,6 +38,7 @@ jobs:
       - run:
           name: Load Docker Image(s) from Cache
           command: |
+            docker pull ${REPO_NAME}:${VERSION} || true
             for TAR in $(ls -1 /cache/*.tar); do
               docker load --input "${TAR}"
             done
@@ -81,9 +82,7 @@ jobs:
       - run:
           name: Load Docker Image(s) from Cache
           command: |
-            for TAR in $(ls -1 /cache/*.tar); do
-              docker load --input "${TAR}"
-            done
+            docker load --input "${TAR}"
       - run:
           name: Publish Docker Image
           command: |
