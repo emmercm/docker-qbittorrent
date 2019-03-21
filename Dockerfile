@@ -20,7 +20,7 @@ RUN set -euo pipefail && \
     cd qBittorrent && \
     git checkout $(git tag --sort=-version:refname | grep "${VERSION}" | head -1) && \
     # Configure and make
-    ./configure --disable-gui --libexecdir && \
+    ./configure --disable-gui --libexecdir=/usr/lib && \
     make -j$(nproc) && \
     make install && \
     # Remove temp files
