@@ -13,7 +13,7 @@ ARG VERSION=.
 RUN set -euo pipefail && \
     # Install both executable dependencies and build dependencies
     cd $(mktemp -d) && \
-    apk --update add --no-cache                              boost-system g++ gcc glib icu-libs libintl libpcre2-16 openssl qt5-qtbase zlib && \
+    # apk --update add --no-cache                              boost-system g++ gcc glib icu-libs libintl libpcre2-16 openssl qt5-qtbase zlib && \
     apk --update add --no-cache --virtual build-dependencies boost-dev g++ gcc git make pkgconfig qt5-qttools-dev && \
     # Checkout from source
     git clone https://github.com/qbittorrent/qBittorrent.git && \
