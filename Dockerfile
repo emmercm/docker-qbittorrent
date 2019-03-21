@@ -14,7 +14,7 @@ RUN set -euo pipefail && \
     # Install both executable dependencies and build dependencies
     cd $(mktemp -d) && \
     apk --update add --no-cache                              qt5-qtbase && \
-    apk --update add --no-cache --virtual build-dependencies boost-dev g++ gcc git make pkgconfig qt5-qttools-dev && \
+    apk --update add --no-cache --virtual build-dependencies boost-dev g++ gcc git libexecinfo-dev make pkgconfig qt5-qttools-dev && \
     # Checkout from source
     git clone https://github.com/qbittorrent/qBittorrent.git && \
     cd qBittorrent && \
