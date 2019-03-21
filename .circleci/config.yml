@@ -38,14 +38,12 @@ jobs:
       - run:
           name: Load Docker Image(s) from Cache
           command: |
-            docker pull ${REPO_NAME}:${VERSION} || true
             for TAR in $(ls -1 /cache/*.tar); do
               docker load --input "${TAR}"
             done
       - run:
           name: Build Docker Image
           command: |
-            docker pull ${REPO_NAME}:${VERSION} || true
             docker build \
               --cache-from=${REPO_NAME}:${VERSION} \
               --build-arg BASE_IMAGE=${BASE_IMAGE} \
