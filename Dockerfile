@@ -9,10 +9,12 @@ FROM ${BASE_IMAGE}
 
 ARG VERSION=.
 
-COPY stacktrace.patch /
+COPY entrypoint.sh stacktrace.patch qBittorrent.conf /
 
 # Build qbittorrent-nox
 RUN set -euo pipefail && \
+    # Reduce base image
+    rm /usr/local/lib/libtorrent-rasterbar.a && \
     # Install both executable dependencies and build dependencies
     cd $(mktemp -d) && \
     apk --update add --no-cache                              qt5-qtbase && \
@@ -31,21 +33,18 @@ RUN set -euo pipefail && \
     apk del --purge build-dependencies && \
     rm -rf /tmp/* && \
     # Test build
-    qbittorrent-nox -v
-
-# Setup qbittorrent-nox
-RUN set -euo pipefail && \
+    qbittorrent-nox -v && \
     # Make directories, and symlink them for quality of life
     mkdir -p ~/.config/qBittorrent && \
     mkdir -p ~/.local/share/data/qBittorrent && \
     mkdir /downloads && \
     mkdir /incomplete && \
-    ln -s ~/.config/qBittorrent /config
-COPY qBittorrent.conf /config/qBittorrent.conf.default
+    ln -s ~/.config/qBittorrent /config && \
+    # Install entrypoint dependencies
+    apk --update add --no-cache curl dumb-init
+
 VOLUME ["/config", "/downloads", "/incomplete"]
+
 EXPOSE 8080 6881/tcp 6881/udp
 
-# Set up entrypoint
-RUN apk add --no-cache curl dumb-init
-COPY entrypoint.sh /
 CMD ["dumb-init", "/entrypoint.sh"]

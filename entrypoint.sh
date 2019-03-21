@@ -25,7 +25,7 @@ echo
 
 # Default qBittorrent config
 if [[ ! -f /config/qBittorrent.conf ]]; then
-    cp /config/qBittorrent.conf.default /config/qBittorrent.conf
+    cp /qBittorrent.conf /config/qBittorrent.conf
 fi
 
 qbittorrent-nox
