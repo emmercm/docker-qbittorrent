@@ -1,4 +1,4 @@
-[![](https://images.microbadger.com/badges/version/emmercm/qbittorrent:4.1.5.svg)](https://hub.docker.com/r/emmercm/qbittorrent)
+[![](https://badgen.net/badge/emmercm/qbittorrent/blue?icon=docker)](https://hub.docker.com/r/emmercm/qbittorrent)
 [![](https://badgen.net/docker/pulls/emmercm/qbittorrent?icon=docker)](https://hub.docker.com/r/emmercm/qbittorrent)
 
 [![](https://badgen.net/badge/emmercm/docker-qbittorrent/purple?icon=github)](https://github.com/emmercm/docker-qbittorrent)
