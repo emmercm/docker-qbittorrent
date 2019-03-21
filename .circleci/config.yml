@@ -30,8 +30,9 @@ jobs:
       - setup_remote_docker
       - restore_cache:
           keys:
-            - v4-{{ .Branch }}-{{ .Environment.VERSION }}-{{ .Revision }}
-            - v4-{{ .Branch }}-{{ .Environment.VERSION }}-
+            - v4-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision }}
+            - v4-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-
+            - v4-{{ .Environment.CIRCLE_JOB }}-
           paths:
             - /cache
       - run:
@@ -61,7 +62,7 @@ jobs:
             fi
             docker save --output /cache/${VERSION}.tar ${REPO_NAME}
       - save_cache:
-          key: v4-{{ .Branch }}-{{ .Environment.VERSION }}-{{ .Revision }}
+          key: v4-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision }}
           paths:
             - /cache
       - persist_to_workspace:
