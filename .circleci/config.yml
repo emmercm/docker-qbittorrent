@@ -132,10 +132,16 @@ workflows:
           base_image: emmercm/libtorrent:1.1-alpine
           version: 4.1.5
           tags: 4.1 4.1-alpine 4 4-alpine latest
+      - build:
+          name: 4.0.*
+          base_image: emmercm/libtorrent:1.1-alpine
+          version: 4.0.4
+          tags: 4.0 4.0-alpine
       
       - push:
           requires:
             - 4.1.*
+            - 4.0.*
           filters:
             branches:
               only: master
