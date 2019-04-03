@@ -37,13 +37,12 @@ RUN set -euo pipefail && \
     mkdir -p ~/.local/share/data/qBittorrent && \
     mkdir /downloads && \
     mkdir /incomplete && \
-    mkdir /torrents && \
     ln -s ~/.config/qBittorrent /config && \
-    ln -s ~/.local/share/data/qBittorrent /torrents && \
+    ln -s ~/.local/share/data/qBittorrent /data && \
     # Install entrypoint dependencies
     apk --update add --no-cache curl dumb-init
 
-VOLUME ["/config", "/downloads", "/incomplete", "/torrents"]
+VOLUME ["/config", "/data", "/downloads", "/incomplete"]
 
 EXPOSE 8080 6881/tcp 6881/udp
 
