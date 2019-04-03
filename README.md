@@ -36,7 +36,8 @@ The images do not require any external Docker networks, volumes, environment var
 ```bash
 $ docker run \
     --publish 8080:8080 \
-    --publish 6881:6881/tcp --publish 6881:6881/udp \
+    --publish 6881:6881/tcp \
+    --publish 6881:6881/udp \
     emmercm/qbittorrent
 ```
 
@@ -57,9 +58,9 @@ Usage:
 $ mkdir config downloads incomplete
 $ docker run \
     --publish 8080:8080 \
-    --publish 6881:6881/tcp --publish 6881:6881/udp \
+    --publish 6881:6881/tcp \
+    --publish 6881:6881/udp \
     --volume "$PWD/config:/config" \
-    --volume "$PWD/torrents:/torrents" \
     --volume "$PWD/data:/data" \
     --volume "$PWD/downloads:/downloads" \
     --volume "$PWD/incomplete:/incomplete" \
