@@ -12,7 +12,7 @@ Headless qBittorrent client with remote web interface.
 # Supported tags
 
 | Tags | Size / Layers |
-|-------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|-|-|
 | `4.1.5`, `4.1.5-alpine`, `4.1`, `4.1-alpine`, `4`, `4-alpine`, `latest` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.1.5.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.1.5 "Get your own image badge on microbadger.com") |
 | `4.0.4`, `4.0.4-alpine`, `4.0`, `4.0-alpine` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.0.4.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.0.4 "Get your own image badge on microbadger.com") |
 | `3.3.16`, `3.3.16-alpine`, `3.3`, `3.3-alpine`, `3`, `3-alpine` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:3.3.16.svg)](https://microbadger.com/images/emmercm/qbittorrent:3.3.16 "Get your own image badge on microbadger.com") |
@@ -49,6 +49,7 @@ Due to the ephemeral nature of Docker containers these images provide a number o
 - `/config`: the qBittorrent config directory containing `qBittorrent.conf`
 - `/downloads`: the default download location
 - `/incomplete`: the default incomplete download location
+- `/torrents`: the qBittorrent folder that contains `.torrent` files and fast resume data
 
 Usage:
 
@@ -57,9 +58,10 @@ $ mkdir config downloads incomplete
 $ docker run \
     --publish 8080:8080 \
     --publish 6881:6881/tcp --publish 6881:6881/udp \
-    --volume "./config:/config" \
-    --volume "./downloads:/downloads" \
-    --volume "./incomplete:/incomplete" \
+    --volume "$PWD/config:/config" \
+    --volume "$PWD/torrents:/torrents" \
+    --volume "$PWD/downloads:/downloads" \
+    --volume "$PWD/incomplete:/incomplete" \
     emmercm/qbittorrent
 ```
 
@@ -71,8 +73,9 @@ Here's an example `docker-compose.yml` config:
 
 ```yaml
 version: "3"
+
 services:
-  qbittorrent-nox:
+  qbittorrent:
     build: .
     ports:
       - 8080:8080
@@ -80,6 +83,7 @@ services:
       - 6881:6881/udp
     volumes:
       - ./config:/config
+      - ./torrents:/torrents
       - ./downloads:/downloads
       - ./incomplete:/incomplete
 ```
@@ -92,6 +96,7 @@ Here's an example `docker-compose.yml` config:
 
 ```yaml
 version: "3"
+
 services:
   vpn:
     image: bubuntux/nordvpn:latest
@@ -114,11 +119,12 @@ services:
       - 6881:6881/udp
     restart: unless-stopped
   
-  qbittorrent-nox:
-    build: .
+  qbittorrent:
+    image: emmercm/qbittorrent:latest
     network_mode: service:vpn
     volumes:
       - ./config:/config
+      - ./torrents:/torrents
       - ./downloads:/downloads
       - ./incomplete:/incomplete
     restart: unless-stopped

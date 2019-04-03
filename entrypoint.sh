@@ -28,4 +28,4 @@ if [[ ! -f /config/qBittorrent.conf ]]; then
     cp /qBittorrent.conf /config/qBittorrent.conf
 fi
 
-qbittorrent-nox
+exec "$@"

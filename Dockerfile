@@ -7,14 +7,12 @@ ARG BASE_IMAGE=emmercm/libtorrent:latest
 
 FROM ${BASE_IMAGE}
 
-ARG VERSION=.
+ARG VERSION=[0-9]*.[0-9]*.[0-9]*
 
 COPY entrypoint.sh stacktrace.patch qBittorrent.conf /
 
 # Build qbittorrent-nox
 RUN set -euo pipefail && \
-    # Reduce base image
-    rm /usr/local/lib/libtorrent-rasterbar.a && \
     # Install both executable dependencies and build dependencies
     cd $(mktemp -d) && \
     apk --update add --no-cache                              qt5-qtbase && \
@@ -39,12 +37,16 @@ RUN set -euo pipefail && \
     mkdir -p ~/.local/share/data/qBittorrent && \
     mkdir /downloads && \
     mkdir /incomplete && \
+    mkdir /torrents && \
     ln -s ~/.config/qBittorrent /config && \
+    ln -s ~/.local/share/data/qBittorrent /torrents && \
     # Install entrypoint dependencies
     apk --update add --no-cache curl dumb-init
 
-VOLUME ["/config", "/downloads", "/incomplete"]
+VOLUME ["/config", "/downloads", "/incomplete", "/torrents"]
 
 EXPOSE 8080 6881/tcp 6881/udp
 
-CMD ["dumb-init", "/entrypoint.sh"]
+ENTRYPOINT ["dumb-init", "/entrypoint.sh"]
+
+CMD ["qbittorrent-nox"]
