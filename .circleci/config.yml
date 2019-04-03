@@ -139,26 +139,26 @@ workflows:
     jobs:
       # https://github.com/qbittorrent/qBittorrent/releases
       - build:
-          name: 4.1
+          name: "4.1"
           base_image: emmercm/libtorrent:1.1-alpine
           version: 4.1.5
           tags: 4.1 4.1-alpine 4 4-alpine latest
       - build:
-          name: 4.0
+          name: "4.0"
           base_image: emmercm/libtorrent:1.1-alpine
           version: 4.0.4
           tags: 4.0 4.0-alpine
       - build:
-          name: 3.3
+          name: "3.3"
           base_image: emmercm/libtorrent:1.0-alpine
           version: 3.3.16
           tags: 3.3 3.3-alpine 3 3-alpine
 
       - test:
           requires:
-            - 4.1
-            - 4.0
-            - 3.3
+            - "4.1"
+            - "4.0"
+            - "3.3"
       
       - push:
           requires:
