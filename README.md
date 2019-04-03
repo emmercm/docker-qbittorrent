@@ -49,6 +49,7 @@ Due to the ephemeral nature of Docker containers these images provide a number o
 - `/config`: the qBittorrent config directory containing `qBittorrent.conf`
 - `/downloads`: the default download location
 - `/incomplete`: the default incomplete download location
+- `/torrents`: the qBittorrent folder that contains `.torrent` files and fast resume data
 
 Usage:
 
@@ -57,9 +58,10 @@ $ mkdir config downloads incomplete
 $ docker run \
     --publish 8080:8080 \
     --publish 6881:6881/tcp --publish 6881:6881/udp \
-    --volume "./config:/config" \
-    --volume "./downloads:/downloads" \
-    --volume "./incomplete:/incomplete" \
+    --volume "$PWD/config:/config" \
+    --volume "$PWD/torrents:/torrents" \
+    --volume "$PWD/downloads:/downloads" \
+    --volume "$PWD/incomplete:/incomplete" \
     emmercm/qbittorrent
 ```
 
@@ -80,6 +82,7 @@ services:
       - 6881:6881/udp
     volumes:
       - ./config:/config
+      - ./torrents:/torrents
       - ./downloads:/downloads
       - ./incomplete:/incomplete
 ```
@@ -119,6 +122,7 @@ services:
     network_mode: service:vpn
     volumes:
       - ./config:/config
+      - ./torrents:/torrents
       - ./downloads:/downloads
       - ./incomplete:/incomplete
     restart: unless-stopped
