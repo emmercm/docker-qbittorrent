@@ -7,7 +7,7 @@ ARG BASE_IMAGE=emmercm/libtorrent:latest
 
 FROM ${BASE_IMAGE}
 
-ARG VERSION=.
+ARG VERSION=[0-9]*.[0-9]*.[0-9]*
 
 COPY entrypoint.sh stacktrace.patch qBittorrent.conf /
 
@@ -47,4 +47,6 @@ VOLUME ["/config", "/downloads", "/incomplete", "/torrents"]
 
 EXPOSE 8080 6881/tcp 6881/udp
 
-CMD ["dumb-init", "/entrypoint.sh"]
+ENTRYPOINT ["dumb-init", "/entrypoint.sh"]
+
+CMD ["qbittorrent-nox"]
