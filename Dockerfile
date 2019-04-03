@@ -13,8 +13,6 @@ COPY entrypoint.sh stacktrace.patch qBittorrent.conf /
 
 # Build qbittorrent-nox
 RUN set -euo pipefail && \
-    # Reduce base image
-    rm /usr/local/lib/libtorrent-rasterbar.a && \
     # Install both executable dependencies and build dependencies
     cd $(mktemp -d) && \
     apk --update add --no-cache                              qt5-qtbase && \
