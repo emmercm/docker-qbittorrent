@@ -37,7 +37,6 @@ RUN set -euo pipefail && \
     mkdir -p ~/.local/share/data/qBittorrent && \
     mkdir /downloads && \
     mkdir /incomplete && \
-    mkdir /torrents && \
     ln -s ~/.config/qBittorrent /config && \
     ln -s ~/.local/share/data/qBittorrent /torrents && \
     # Install entrypoint dependencies
