@@ -1,8 +1,8 @@
 # Attached folders
 config/
+data/
 downloads/
 incomplete
-torrents/
 
 # Extras
 docker-compose.yml

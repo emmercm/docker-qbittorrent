@@ -10,6 +10,7 @@ Dockerfile
 
 # Attached folders
 config/
+data/
 downloads/
 incomplete
 

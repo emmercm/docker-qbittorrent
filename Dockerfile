@@ -9,6 +9,8 @@ FROM ${BASE_IMAGE}
 
 ARG VERSION=[0-9]*.[0-9]*.[0-9]*
 
+ENV TZ=Etc/UTC
+
 COPY entrypoint.sh stacktrace.patch qBittorrent.conf /
 
 # Build qbittorrent-nox
@@ -39,8 +41,8 @@ RUN set -euo pipefail && \
     mkdir /incomplete && \
     ln -s ~/.config/qBittorrent /config && \
     ln -s ~/.local/share/data/qBittorrent /data && \
-    # Install entrypoint dependencies
-    apk --update add --no-cache curl dumb-init
+    # Install container and entrypoint dependencies
+    apk --update add --no-cache dumb-init tzdata
 
 VOLUME ["/config", "/data", "/downloads", "/incomplete"]
 
