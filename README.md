@@ -67,6 +67,10 @@ $ docker run \
     emmercm/qbittorrent
 ```
 
+## Environment variables
+
+To change the timezone of the container set the `TZ` environment variable. The full list of available options can be found on [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+
 ## Docker Compose
 
 [`docker-compose`](https://docs.docker.com/compose/) can help with defining the `docker run` config in a repeatable way rather than ensuring you always pass the same CLI arguments.
@@ -79,6 +83,8 @@ version: "3"
 services:
   qbittorrent:
     build: .
+    environment:
+      - TZ=America/New_York
     ports:
       - 8080:8080
       - 6881:6881/tcp
@@ -114,7 +120,7 @@ services:
       - CATEGORY=P2P
       - NETWORK=192.168.1.0/24
       - OPENVPN_OPTS=--pull-filter ignore "ping-restart" --ping-exit 180
-      - TZ=America/Denver
+      - TZ=America/New_York
     ports:
       - 8080:8080
       - 6881:6881/tcp
@@ -124,6 +130,8 @@ services:
   qbittorrent:
     image: emmercm/qbittorrent:latest
     network_mode: service:vpn
+    environment:
+      - TZ=America/New_York
     volumes:
       - ./config:/config
       - ./data:/data
