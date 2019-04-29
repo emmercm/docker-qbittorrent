@@ -9,8 +9,6 @@ FROM ${BASE_IMAGE}
 
 ARG VERSION=[0-9]*.[0-9]*.[0-9]*
 
-ENV TZ=Etc/UTC
-
 COPY entrypoint.sh stacktrace.patch qBittorrent.conf /
 
 # Build qbittorrent-nox

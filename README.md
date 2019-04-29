@@ -69,7 +69,7 @@ $ docker run \
 
 ## Environment variables
 
-`TZ` is exposed as an environemnt variable to configure `tzdata`, the default is set to `Etc/UTC`. The full list of available options can be found on [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+To change the timezone of the container set the `TZ` environment variable. The full list of available options can be found on [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
 
 ## Docker Compose
 
