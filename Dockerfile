@@ -40,7 +40,7 @@ RUN set -euo pipefail && \
     ln -s ~/.config/qBittorrent /config && \
     ln -s ~/.local/share/data/qBittorrent /data && \
     # Install container and entrypoint dependencies
-    apk --update add --no-cache dumb-init tzdata
+    apk --update add --no-cache curl dumb-init tzdata
 
 VOLUME ["/config", "/data", "/downloads", "/incomplete"]
 
