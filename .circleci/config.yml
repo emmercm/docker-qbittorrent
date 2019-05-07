@@ -141,7 +141,7 @@ workflows:
       - build:
           name: "4.1"
           base_image: emmercm/libtorrent:1.1-alpine
-          version: 4.1.5
+          version: 4.1.6
           tags: 4.1 4.1-alpine 4 4-alpine latest
       - build:
           name: "4.0"
