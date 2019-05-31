@@ -12,8 +12,6 @@ executors:
 jobs:
   build:
     parameters:
-      base_image:
-        type: string
       version:
         type: string
       tags:
@@ -21,7 +19,6 @@ jobs:
         default: ''
     executor: docker
     environment:
-      BASE_IMAGE: << parameters.base_image >>
       VERSION: << parameters.version >>
       TAGS: << parameters.tags >>
       <<: *environment
@@ -40,16 +37,17 @@ jobs:
           command: |
             for TAR in $(ls -1 /cache/*.tar); do
               docker load --input "${TAR}"
+              rm "${TAR}"
             done
       - run:
           name: Build Docker Image
           command: |
             docker build \
+              --file=${VERSION%.*}/Dockerfile \
               --cache-from=${REPO_NAME}:${VERSION} \
-              --build-arg BASE_IMAGE=${BASE_IMAGE} \
               --build-arg VERSION=${VERSION} \
               --tag ${REPO_NAME}:${VERSION} \
-              --tag ${REPO_NAME}:${VERSION}-${BASE_IMAGE##*-} .
+              --tag ${REPO_NAME}:${VERSION}-alpine .
             for TAG in ${TAGS}; do
               docker tag ${REPO_NAME}:${VERSION} ${REPO_NAME}:${TAG}
             done
@@ -102,7 +100,7 @@ jobs:
           name: Update MicroBadger
           command: |
             apk add --no-cache curl
-            curl --request POST https://hooks.microbadger.com/images/emmercm/qbittorrent/5yiZcqfV6alrIjrmTZgJKMKZ56s=
+            curl --request POST "${MICROBADGER_WEBHOOK}"
 
   update-description:
     executor: docker
@@ -140,17 +138,14 @@ workflows:
       # https://github.com/qbittorrent/qBittorrent/releases
       - build:
           name: "4.1"
-          base_image: emmercm/libtorrent:1.1-alpine
           version: 4.1.6
           tags: 4.1 4.1-alpine 4 4-alpine latest
       - build:
           name: "4.0"
-          base_image: emmercm/libtorrent:1.1-alpine
           version: 4.0.4
           tags: 4.0 4.0-alpine
       - build:
           name: "3.3"
-          base_image: emmercm/libtorrent:1.0-alpine
           version: 3.3.16
           tags: 3.3 3.3-alpine 3 3-alpine
 
