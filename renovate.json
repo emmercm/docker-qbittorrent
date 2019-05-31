@@ -3,5 +3,19 @@
     "config:base"
   ],
   "assignees": ["@emmercm"],
-  "pinDigests": true
+  "pinDigests": true,
+  "packageRules": [{
+    "paths": ["**/Dockerfile"],
+    "major": {
+      "enabled": false
+    },
+    "separateMajorMinor": true,
+    "minor": {
+      "enabled": false
+    },
+    "separateMinorPatch": true,
+    "patch": {
+      "enabled": true
+    }
+  }]
 }
