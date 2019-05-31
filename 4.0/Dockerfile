@@ -7,7 +7,7 @@ FROM emmercm/libtorrent:1.1.13
 
 ARG VERSION=4.0.[0-9]*
 
-COPY entrypoint.sh qBittorrent.conf /
+COPY entrypoint.sh stacktrace.patch qBittorrent.conf /
 
 # Build qbittorrent-nox
 RUN set -euo pipefail && \
