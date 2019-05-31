@@ -3,13 +3,11 @@
 #   https://github.com/qbittorrent/qBittorrent/wiki/Running-qBittorrent-without-X-server#compile-from-source---how-to-disable-qbittorrents-gui
 #   https://discourse.osmc.tv/t/howto-update-compile-qbittorrent-nox/19726/3
 
-ARG BASE_IMAGE=emmercm/libtorrent:latest
+FROM emmercm/libtorrent:1.1.13
 
-FROM ${BASE_IMAGE}
+ARG VERSION=4.1.[0-9]*
 
-ARG VERSION=[0-9]*.[0-9]*.[0-9]*
-
-COPY entrypoint.sh stacktrace.patch qBittorrent.conf /
+COPY entrypoint.sh qBittorrent.conf /
 
 # Build qbittorrent-nox
 RUN set -euo pipefail && \
@@ -23,7 +21,6 @@ RUN set -euo pipefail && \
     git checkout $(git tag --sort=-version:refname | grep "${VERSION}" | head -1) && \
     # Configure and make
     ./configure --disable-gui && \
-    (patch -p0 -i /stacktrace.patch || true) && rm /stacktrace.patch && \
     make -j$(nproc) && \
     make install && \
     # Remove temp files
