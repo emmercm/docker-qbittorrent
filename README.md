@@ -34,7 +34,7 @@ These images are built with `qbittorrent-nox` (no X server), a version of qBitto
 The images do not require any external Docker networks, volumes, environment variables, or arguments and can be run with just:
 
 ```bash
-$ docker run \
+docker run \
     --publish 8080:8080 \
     --publish 6881:6881/tcp \
     --publish 6881:6881/udp \
@@ -55,8 +55,8 @@ Due to the ephemeral nature of Docker containers these images provide a number o
 Usage:
 
 ```bash
-$ mkdir config downloads incomplete
-$ docker run \
+mkdir config downloads incomplete
+docker run \
     --publish 8080:8080 \
     --publish 6881:6881/tcp \
     --publish 6881:6881/udp \
