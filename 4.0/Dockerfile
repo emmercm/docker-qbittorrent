@@ -21,6 +21,7 @@ RUN set -euo pipefail && \
     git checkout $(git tag --sort=-version:refname | grep "${VERSION}" | head -1) && \
     # Configure and make
     ./configure --disable-gui && \
+    (patch -p0 -i /stacktrace.patch || true) && rm /stacktrace.patch && \
     make -j$(nproc) && \
     make install && \
     # Remove temp files
