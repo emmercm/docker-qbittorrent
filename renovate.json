@@ -4,6 +4,9 @@
   ],
   "assignees": ["@emmercm"],
   "pinDigests": true,
+  "circleci": {
+    "automerge": true
+  },
   "packageRules": [{
     "paths": ["**/Dockerfile"],
     "major": {
