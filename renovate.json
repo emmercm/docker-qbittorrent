@@ -4,18 +4,25 @@
   ],
   "assignees": ["@emmercm"],
   "pinDigests": true,
-  "packageRules": [{
-    "paths": ["**/Dockerfile"],
-    "major": {
-      "enabled": false
+  "packageRules": [
+    {
+      "paths": [".circleci/config.yml"],
+      "assignees": [],
+      "automerge": true
     },
-    "separateMajorMinor": true,
-    "minor": {
-      "enabled": false
-    },
-    "separateMinorPatch": true,
-    "patch": {
-      "enabled": true
+    {
+      "paths": ["**/Dockerfile"],
+      "major": {
+        "enabled": false
+      },
+      "separateMajorMinor": true,
+      "minor": {
+        "enabled": false
+      },
+      "separateMinorPatch": true,
+      "patch": {
+        "enabled": true
+      }
     }
-  }]
+  ]
 }
