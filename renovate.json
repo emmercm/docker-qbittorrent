@@ -4,12 +4,8 @@
   ],
   "assignees": ["@emmercm"],
   "pinDigests": true,
+  "automerge": true,
   "packageRules": [
-    {
-      "paths": [".circleci/config.yml"],
-      "assignees": [],
-      "automerge": true
-    },
     {
       "paths": ["**/Dockerfile"],
       "major": {
