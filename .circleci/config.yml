@@ -52,6 +52,12 @@ jobs:
               docker tag ${REPO_NAME}:${VERSION} ${REPO_NAME}:${TAG}
             done
       - run:
+          name: Test Docker Image
+          command: |
+            apk add --no-cache curl
+            curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64 && chmod +x container-structure-test-linux-amd64 && mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+            container-structure-test test --config ${VERSION%.*}/container-structure-test.yml --image ${REPO_NAME}:${VERSION}
+      - run:
           name: Save Docker Image(s) to Cache
           command: |
             if [[ ! -e /cache ]]; then
