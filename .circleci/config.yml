@@ -7,7 +7,7 @@ references:
 executors:
   docker:
     docker:
-      - image: docker:stable@sha256:39080a2cd67a6893e259c68e04add4176935169c3df72a214b0d526324f76568
+      - image: docker:stable@sha256:c717e554ce5dca431f72252bf3b62bd5d6c445bbf287d6f3e8d0f9d08d93f8db
 
 jobs:
   build:
