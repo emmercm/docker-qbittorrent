@@ -13,7 +13,7 @@ Headless qBittorrent client with remote web interface.
 
 | Tags | Size / Layers |
 |-|-|
-| `4.1.6`, `4.1.6-alpine`, `4.1`, `4.1-alpine`, `4`, `4-alpine`, `latest` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.1.6.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.1.6 "Get your own image badge on microbadger.com") |
+| `4.1.7`, `4.1.7-alpine`, `4.1`, `4.1-alpine`, `4`, `4-alpine`, `latest` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.1.7.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.1.7 "Get your own image badge on microbadger.com") |
 | `4.0.4`, `4.0.4-alpine`, `4.0`, `4.0-alpine` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.0.4.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.0.4 "Get your own image badge on microbadger.com") |
 | `3.3.16`, `3.3.16-alpine`, `3.3`, `3.3-alpine`, `3`, `3-alpine` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:3.3.16.svg)](https://microbadger.com/images/emmercm/qbittorrent:3.3.16 "Get your own image badge on microbadger.com") |
 
