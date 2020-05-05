@@ -143,9 +143,13 @@ workflows:
     jobs:
       # https://github.com/qbittorrent/qBittorrent/releases
       - build:
+          name: "4.2"
+          version: 4.2.5
+          tags: 4.2 4.2-alpine 4 4-alpine latest
+      - build:
           name: "4.1"
           version: 4.1.7
-          tags: 4.1 4.1-alpine 4 4-alpine latest
+          tags: 4.1 4.1-alpine
       - build:
           name: "4.0"
           version: 4.0.4
@@ -157,6 +161,7 @@ workflows:
 
       - test:
           requires:
+            - "4.2"
             - "4.1"
             - "4.0"
             - "3.3"
