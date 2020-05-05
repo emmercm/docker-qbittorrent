@@ -1,0 +1,8 @@
+# Attached folders
+config/
+data/
+downloads/
+incomplete
+
+# Extras
+docker-compose.yml
