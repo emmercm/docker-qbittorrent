@@ -1,10 +1,10 @@
 [![](https://raw.githubusercontent.com/emmercm/docker-qbittorrent/assets/qbittorrent.png)](https://www.qbittorrent.org/)
 
 [![](https://badgen.net/badge/emmercm/qbittorrent/blue?icon=docker)](https://hub.docker.com/r/emmercm/qbittorrent)
-[![](https://badgen.net/docker/pulls/emmercm/qbittorrent?icon=docker)](https://hub.docker.com/r/emmercm/qbittorrent)
+[![](https://badgen.net/docker/pulls/emmercm/qbittorrent?icon=docker&label=pulls)](https://hub.docker.com/r/emmercm/qbittorrent)
+[![](https://badgen.net/docker/stars/emmercm/qbittorrent?icon=docker&label=stars)](https://hub.docker.com/r/emmercm/qbittorrent)
 
 [![](https://badgen.net/badge/emmercm/docker-qbittorrent/purple?icon=github)](https://github.com/emmercm/docker-qbittorrent)
-[![](https://badgen.net/circleci/github/emmercm/docker-qbittorrent/master?icon=circleci)](https://github.com/emmercm/docker-qbittorrent/blob/master/.circleci/config.yml)
 [![](https://badgen.net/github/license/emmercm/docker-qbittorrent?color=grey)](https://github.com/emmercm/docker-qbittorrent/blob/master/LICENSE)
 
 Headless qBittorrent client with remote web interface.
