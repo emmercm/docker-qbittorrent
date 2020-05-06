@@ -16,9 +16,11 @@ commandTests:
   - name: "qbittorrent-nox --version"
     command: "qbittorrent-nox"
     args: ["--version"]
+    expectedOutput: ["qBittorrent v4.2"]
     exitCode: 0
 
   - name: "./entrypoint.sh qbittorrent-nox --daemon"
     command: "./entrypoint.sh"
     args: ["qbittorrent-nox", "--daemon"]
+    expectedOutput: ["Waiting for internet connection", "External IP"]
     exitCode: 0
