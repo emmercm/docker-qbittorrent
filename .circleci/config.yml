@@ -10,6 +10,30 @@ executors:
       - image: docker:stable
 
 jobs:
+  dummy:
+    executor: docker
+    steps:
+      - run:
+          name: Dummy
+          command: echo ok
+
+  lint:
+    parameters:
+      version:
+        type: string
+    executor: docker
+    environment:
+      VERSION: << parameters.version >>
+      <<: *environment
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Run hadolint
+          command: |
+            cd "${VERSION}"
+            docker run --rm --interactive hadolint/hadolint < Dockerfile
+
   build:
     parameters:
       version:
@@ -42,28 +66,28 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            cd ${VERSION%.*}
+            cd "${VERSION%.*}"
             docker build \
-              --cache-from=${REPO_NAME}:${VERSION} \
-              --build-arg VERSION=${VERSION} \
-              --tag ${REPO_NAME}:${VERSION} \
-              --tag ${REPO_NAME}:${VERSION}-alpine .
+              --cache-from="${REPO_NAME}:${VERSION}" \
+              --build-arg VERSION="${VERSION}" \
+              --tag "${REPO_NAME}:${VERSION}" \
+              --tag "${REPO_NAME}:${VERSION}-alpine" .
             for TAG in ${TAGS}; do
-              docker tag ${REPO_NAME}:${VERSION} ${REPO_NAME}:${TAG}
+              docker tag "${REPO_NAME}:${VERSION}" "${REPO_NAME}:${TAG}"
             done
       - run:
           name: Test Docker Image
           command: |
             apk add --no-cache curl
             curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64 && chmod +x container-structure-test-linux-amd64 && mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
-            container-structure-test test --config ${VERSION%.*}/container-structure-test.yml --image ${REPO_NAME}:${VERSION}
+            container-structure-test test --config "${VERSION%.*}/container-structure-test.yml" --image "${REPO_NAME}:${VERSION}"
       - run:
           name: Save Docker Image(s) to Cache
           command: |
             if [[ ! -e /cache ]]; then
               mkdir /cache
             fi
-            docker save --output /cache/${VERSION}.tar ${REPO_NAME}
+            docker save --output "/cache/${VERSION}.tar" "${REPO_NAME}"
       - save_cache:
           key: v4-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision }}
           paths:
@@ -72,14 +96,6 @@ jobs:
           root: /cache
           paths:
             - "*"
-
-  test:
-    executor: docker
-    steps:
-      - run:
-          name: Test Docker Image(s)
-          command: |
-            echo ok
 
   push:
     executor: docker
@@ -99,8 +115,8 @@ jobs:
           name: Publish Docker Image
           command: |
             echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
-            for TAG in $(docker image ls --format "{{.Repository}}:{{.Tag}}" ${REPO_NAME}); do
-              docker push ${TAG}
+            for TAG in $(docker image ls --format "{{.Repository}}:{{.Tag}}" "${REPO_NAME}"); do
+              docker push "${TAG}"
             done
       - run:
           name: Update MicroBadger
@@ -141,30 +157,58 @@ workflows:
   version: 2.1
   build-test-push:
     jobs:
+      - lint:
+          name: "4.2-lint"
+          version: "4.2"
+      - lint:
+          name: "4.1-lint"
+          version: "4.1"
+      - lint:
+          name: "4.0-lint"
+          version: "4.0"
+      - lint:
+          name: "3.3-lint"
+          version: "3.3"
+      - dummy:
+          name: "lint"
+          requires:
+            - "4.2-lint"
+            - "4.1-lint"
+            - "4.0-lint"
+            - "3.3-lint"
+
       # https://github.com/qbittorrent/qBittorrent/releases
       - build:
-          name: "4.2"
-          version: 4.2.5
+          name: "4.2-build-test"
+          version: "4.2.5"
           tags: 4.2 4.2-alpine 4 4-alpine latest
-      - build:
-          name: "4.1"
-          version: 4.1.9
-          tags: 4.1 4.1-alpine
-      - build:
-          name: "4.0"
-          version: 4.0.4
-          tags: 4.0 4.0-alpine
-      - build:
-          name: "3.3"
-          version: 3.3.16
-          tags: 3.3 3.3-alpine 3 3-alpine
-
-      - test:
           requires:
-            - "4.2"
-            - "4.1"
-            - "4.0"
-            - "3.3"
+            - "lint"
+      - build:
+          name: "4.1-build-test"
+          version: "4.1.9"
+          tags: 4.1 4.1-alpine
+          requires:
+            - "lint"
+      - build:
+          name: "4.0-build-test"
+          version: "4.0.4"
+          tags: 4.0 4.0-alpine
+          requires:
+            - "lint"
+      - build:
+          name: "3.3-build-test"
+          version: "3.3.16"
+          tags: 3.3 3.3-alpine 3 3-alpine
+          requires:
+            - "lint"
+      - dummy:
+          name: "test"
+          requires:
+            - "4.2-build-test"
+            - "4.1-build-test"
+            - "4.0-build-test"
+            - "3.3-build-test"
       
       - push:
           requires:

@@ -9,20 +9,21 @@ ARG VERSION=3.3.[0-9]*
 
 COPY entrypoint.sh stacktrace.patch qBittorrent.conf /
 
+SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
+
 # Build qbittorrent-nox
-RUN set -euo pipefail && \
-    # Install both executable dependencies and build dependencies
-    cd $(mktemp -d) && \
-    apk --update add --no-cache                              qt5-qtbase && \
+# hadolint ignore=DL3003,DL3018
+RUN apk --update add --no-cache                              qt5-qtbase && \
     apk --update add --no-cache --virtual build-dependencies boost-dev g++ gcc git make pkgconfig qt5-qttools-dev && \
     # Checkout from source
+    cd "$(mktemp -d)" && \
     git clone https://github.com/qbittorrent/qBittorrent.git && \
     cd qBittorrent && \
-    git checkout $(git tag --sort=-version:refname | grep "${VERSION}" | head -1) && \
+    git checkout "$(git tag --sort=-version:refname | grep "${VERSION}" | head -1)" && \
     # Configure and make
     ./configure --disable-gui && \
     (patch -p0 -i /stacktrace.patch || true) && rm /stacktrace.patch && \
-    make -j$(nproc) && \
+    make "-j$(nproc)" && \
     make install && \
     # Remove temp files
     cd && \
