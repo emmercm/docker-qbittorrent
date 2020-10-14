@@ -83,7 +83,8 @@ version: "3"
 
 services:
   qbittorrent:
-    build: .
+    image: emmercm/qbittorrent:latest
+    restart: unless-stopped
     environment:
       - TZ=America/New_York
     ports:
@@ -108,9 +109,10 @@ version: "3"
 
 services:
   vpn:
-    image: bubuntux/nordvpn:latest
+    image: bubuntux/nordvpn:openvpn
+    restart: unless-stopped
     cap_add:
-      - net_admin
+      - NET_ADMIN
     devices:
       - /dev/net/tun
     environment:
@@ -119,17 +121,19 @@ services:
       - COUNTRY=United_States
       - PROTOCOL=UDP
       - CATEGORY=P2P
+      # Your local network, potentially 192.168.0.0/24 or something else
       - NETWORK=192.168.1.0/24
-      - OPENVPN_OPTS=--pull-filter ignore "ping-restart" --ping-exit 180
+      - OPENVPN_OPTS='--pull-filter ignore "ping-restart" --ping-exit 180'
       - TZ=America/New_York
+    # Ports from qBittorrent
     ports:
       - 8080:8080
       - 6881:6881/tcp
       - 6881:6881/udp
-    restart: unless-stopped
   
   qbittorrent:
     image: emmercm/qbittorrent:latest
+    restart: unless-stopped
     network_mode: service:vpn
     environment:
       - TZ=America/New_York
@@ -138,10 +142,11 @@ services:
       - ./data:/data
       - ./downloads:/downloads
       - ./incomplete:/incomplete
-    restart: unless-stopped
 ```
 
 # Image variants
+
+All images are based on [`emmercm/libtorrent`](https://hub.docker.com/r/emmercm/libtorrent) and therefore inherit those images' OS version, which is kept as up to date as possible.
 
 ## `emmercm/qbittorrent:<version>-alpine`
 
