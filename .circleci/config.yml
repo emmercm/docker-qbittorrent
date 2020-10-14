@@ -139,6 +139,7 @@ jobs:
             wget https://github.com/christian-korneck/docker-pushrm/releases/download/v1.5.0/docker-pushrm_linux_amd64 -O "$HOME/.docker/cli-plugins/docker-pushrm"
             chmod +x "$HOME/.docker/cli-plugins/docker-pushrm"
       - run:
+          # Can't use 2FA: https://github.com/docker/roadmap/issues/115
           name: Update Docker Hub Description
           command: |
             echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
@@ -212,6 +213,6 @@ workflows:
           requires:
             - test
             # - push
-          filters:
-            branches:
-              only: master
+          # filters:
+          #   branches:
+          #     only: master
