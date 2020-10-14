@@ -96,6 +96,20 @@ jobs:
           root: /cache
           paths:
             - "*"
+      # TODO: REMOVE ME
+      - run:
+          name: Install docker-pushrm
+          command: |
+            if [[ ! -d "$HOME/.docker/cli-plugins" ]]; then
+              mkdir -p "$HOME/.docker/cli-plugins"
+            fi
+            wget https://github.com/christian-korneck/docker-pushrm/releases/download/v1.5.0/docker-pushrm_linux_amd64 -O "$HOME/.docker/cli-plugins/docker-pushrm"
+            chmod +x "$HOME/.docker/cli-plugins/docker-pushrm"
+      - run:
+          name: Publish Docker README
+          command: |
+            echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+            docker pushrm "${REPO_NAME}"
 
   push:
     executor: docker
@@ -105,6 +119,14 @@ jobs:
       - attach_workspace:
           at: /cache
       - setup_remote_docker
+      - run:
+          name: Install docker-pushrm
+          command: |
+            if [[ ! -d "$HOME/.docker/cli-plugins" ]]; then
+              mkdir -p "$HOME/.docker/cli-plugins"
+            fi
+            wget https://github.com/christian-korneck/docker-pushrm/releases/download/v1.5.0/docker-pushrm_linux_amd64 -O "$HOME/.docker/cli-plugins/docker-pushrm"
+            chmod +x "$HOME/.docker/cli-plugins/docker-pushrm"
       - run:
           name: Load Docker Image(s) from Cache
           command: |
@@ -118,6 +140,11 @@ jobs:
             for TAG in $(docker image ls --format "{{.Repository}}:{{.Tag}}" "${REPO_NAME}"); do
               docker push "${TAG}"
             done
+      - run:
+          name: Publish Docker README
+          command: |
+            echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+            docker pushrm "${REPO_NAME}"
       - run:
           name: Update MicroBadger
           command: |
