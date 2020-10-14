@@ -146,6 +146,8 @@ services:
 
 # Image variants
 
+All images are based on [`emmercm/libtorrent`](https://hub.docker.com/r/emmercm/libtorrent) and therefore inherit those images' OS version, which is kept as up to date as possible.
+
 ## `emmercm/qbittorrent:<version>-alpine`
 
 The default image variant, these images are based on [the `alpine` official image](https://hub.docker.com/_/alpine) which is designed to be "small, simple, and secure." This variant is recommended for when final image size is a concern.
