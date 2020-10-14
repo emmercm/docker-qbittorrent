@@ -211,8 +211,7 @@ workflows:
 
       - update-description:
           requires:
-            - test
-            # - push
-          # filters:
-          #   branches:
-          #     only: master
+            - push
+          filters:
+            branches:
+              only: master
