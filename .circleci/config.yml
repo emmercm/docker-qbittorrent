@@ -131,27 +131,19 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install docker-pushrm
+          command: |
+            if [[ ! -d "$HOME/.docker/cli-plugins" ]]; then
+              mkdir -p "$HOME/.docker/cli-plugins"
+            fi
+            wget https://github.com/christian-korneck/docker-pushrm/releases/download/v1.5.0/docker-pushrm_linux_amd64 -O "$HOME/.docker/cli-plugins/docker-pushrm"
+            chmod +x "$HOME/.docker/cli-plugins/docker-pushrm"
+      - run:
+          # Can't use 2FA: https://github.com/docker/roadmap/issues/115
           name: Update Docker Hub Description
           command: |
-            apk add --no-cache curl jq
-            TOKEN=$(curl \
-              --silent \
-              --request POST \
-              https://hub.docker.com/v2/users/login/ \
-              --header "Content-Type: application/json" \
-              --data '{"username":"'"${DOCKERHUB_USERNAME}"'", "password":"'"${DOCKERHUB_PASS}"'"}' | \
-              jq -r .token)
-            jq \
-              --null-input \
-              --arg DESCRIPTION "$(cat README.md | grep '^\w' | head -1)" \
-              --arg FULL_DESCRIPTION "$(cat README.md)" \
-              '{"description":$DESCRIPTION, "full_description":$FULL_DESCRIPTION}' | \
-              curl \
-                --request PATCH \
-                https://hub.docker.com/v2/repositories/${REPO_NAME}/ \
-                --header "Content-Type: application/json" \
-                --header "Authorization: JWT ${TOKEN}" \
-                --data @-
+            echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+            docker pushrm "${REPO_NAME}" --short "$(cat README.md | grep '^\w' | head -1)"
 
 workflows:
   version: 2.1
