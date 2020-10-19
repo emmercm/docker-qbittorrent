@@ -32,11 +32,11 @@ RUN apk --update add --no-cache                              qt5-qtbase && \
     qbittorrent-nox -v && \
     # Make directories, and symlink them for quality of life
     mkdir -p ~/.config/qBittorrent && \
-    mkdir -p ~/.local/share/data/qBittorrent && \
+    mkdir -p ~/.local/share/qBittorrent && \
     mkdir /downloads && \
     mkdir /incomplete && \
     ln -s ~/.config/qBittorrent /config && \
-    ln -s ~/.local/share/data/qBittorrent /data && \
+    ln -s ~/.local/share/qBittorrent /data && \
     # Install container and entrypoint dependencies
     apk --update add --no-cache curl dumb-init tzdata
 
