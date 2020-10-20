@@ -18,7 +18,7 @@ commandTests:
   - name: "qbittorrent-nox --version"
     command: "qbittorrent-nox"
     args: ["--version"]
-    expectedOutput: ["qBittorrent v4.1"]
+    expectedOutput: ["qBittorrent v4.3"]
     excludedError: [".+"]
     exitCode: 0
 
