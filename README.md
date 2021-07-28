@@ -11,13 +11,13 @@ Headless qBittorrent client with remote web interface.
 
 # Supported tags
 
-| Tags | Size / Layers |
-|-|-|
-| `4.3.5`, `4.3.5-alpine`, `4.3`, `4.3-alpine`, `4`, `4-alpine`, `latest` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.3.5.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.3.5 "Get your own image badge on microbadger.com") |
-| `4.2.5`, `4.2.5-alpine`, `4.2`, `4.2-alpine` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.2.5.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.2.5 "Get your own image badge on microbadger.com") |
-| `4.1.9`, `4.1.9-alpine`, `4.1`, `4.1-alpine` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.1.9.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.1.9 "Get your own image badge on microbadger.com") |
-| `4.0.4`, `4.0.4-alpine`, `4.0`, `4.0-alpine` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:4.0.4.svg)](https://microbadger.com/images/emmercm/qbittorrent:4.0.4 "Get your own image badge on microbadger.com") |
-| `3.3.16`, `3.3.16-alpine`, `3.3`, `3.3-alpine`, `3`, `3-alpine` | [![](https://images.microbadger.com/badges/image/emmercm/qbittorrent:3.3.16.svg)](https://microbadger.com/images/emmercm/qbittorrent:3.3.16 "Get your own image badge on microbadger.com") |
+| Tags | Layers | Size |
+|-|-|-|
+| `4.3.5`, `4.3.5-alpine`, `4.3`, `4.3-alpine`, `4`, `4-alpine`, `latest` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.3.5?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.3.5?icon=docker&label=size) |
+| `4.2.5`, `4.2.5-alpine`, `4.2`, `4.2-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.2.5?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.2.5?icon=docker&label=size) |
+| `4.1.9`, `4.1.9-alpine`, `4.1`, `4.1-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.1.9?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.1.9?icon=docker&label=size) |
+| `4.0.4`, `4.0.4-alpine`, `4.0`, `4.0-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.0.4?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.0.4?icon=docker&label=size) |
+| `3.3.16`, `3.3.16-alpine`, `3.3`, `3.3-alpine`, `3`, `3-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/3.3.16?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/3.3.16?icon=docker&label=size) |
 
 # What is qBittorrent?
 
