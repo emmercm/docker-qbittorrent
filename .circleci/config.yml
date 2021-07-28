@@ -118,11 +118,6 @@ jobs:
             for TAG in $(docker image ls --format "{{.Repository}}:{{.Tag}}" "${REPO_NAME}"); do
               docker push "${TAG}"
             done
-      - run:
-          name: Update MicroBadger
-          command: |
-            apk add --no-cache curl
-            curl --request POST "${MICROBADGER_WEBHOOK}"
 
   update-description:
     executor: docker
