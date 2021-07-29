@@ -7,7 +7,7 @@ references:
 executors:
   docker:
     docker:
-      - image: docker:dind
+      - image: docker:latest
 
 jobs:
   dummy:
@@ -48,7 +48,8 @@ jobs:
       <<: *environment
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.6
       - restore_cache:
           keys:
             - v4-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision }}
