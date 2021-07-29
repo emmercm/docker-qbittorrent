@@ -48,6 +48,30 @@ jobs:
       <<: *environment
     steps:
       - checkout
+      - run:
+          name: Shortcut build
+          command: |
+            apk add --no-cache curl git jq > /dev/null
+            # If tag doesn't exist, don't halt job
+            curl -f "https://index.docker.io/v1/repositories/${REPO_NAME}/tags/${VERSION}" &> /dev/null || {
+              echo "${REPO_NAME}:${VERSION} doesn't exist, continuing build"
+              exit 0
+            }
+            # If directory has changes, don't halt job (assumes not fork PR)
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
+              GIT_DIFF_BASE="HEAD~"
+            else
+              CIRCLE_PR_NUMBER=${CIRCLE_PR_NUMBER:-$(echo "${CIRCLE_PULL_REQUEST}" | sed 's/.\+\///')}
+              GIT_DIFF_BASE="origin/$(curl -s "https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pulls/${CIRCLE_PR_NUMBER}" | jq -r '.base.ref')"
+            fi
+            DIRECTORY_MODIFIED=$(git diff "${GIT_DIFF_BASE}" --name-only | grep '/' | sed 's/\/.\+//g' | grep "${DIRECTORY:-${VERSION%.*}}" || true)
+            if [[ "${DIRECTORY_MODIFIED}" != "" ]]; then
+              echo "Directory ${DIRECTORY_MODIFIED} has changes, continuing build"
+              exit 0
+            fi
+            # Otherwise halt job
+            echo "Shortcutting the build of ${REPO_NAME}:${VERSION}"
+            circleci-agent step halt
       - setup_remote_docker:
           version: 20.10.6
       - restore_cache:
