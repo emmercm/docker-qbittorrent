@@ -13,7 +13,7 @@ Headless qBittorrent client with remote web interface.
 
 | Tags | Layers | Size |
 |-|-|-|
-| `4.3.8`, `4.3.8-alpine`, `4.3`, `4.3-alpine`, `4`, `4-alpine`, `latest` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.3.8?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.3.8?icon=docker&label=size) |
+| `4.3.9`, `4.3.9-alpine`, `4.3`, `4.3-alpine`, `4`, `4-alpine`, `latest` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.3.9?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.3.9?icon=docker&label=size) |
 | `4.2.5`, `4.2.5-alpine`, `4.2`, `4.2-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.2.5?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.2.5?icon=docker&label=size) |
 | `4.1.9`, `4.1.9-alpine`, `4.1`, `4.1-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.1.9?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.1.9?icon=docker&label=size) |
 | `4.0.4`, `4.0.4-alpine`, `4.0`, `4.0-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.0.4?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.0.4?icon=docker&label=size) |
