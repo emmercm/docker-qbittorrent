@@ -19,7 +19,7 @@ RUN apk --update add --no-cache                              qt5-qtbase && \
     cd "$(mktemp -d)" && \
     git clone https://github.com/qbittorrent/qBittorrent.git && \
     cd qBittorrent && \
-    git checkout "$(git tag --sort=-version:refname | grep "${VERSION}" | head -1)" && \
+    git checkout "$(git tag --sort=-version:refname | grep '\.[0-9]\+$' | grep "${VERSION}" | head -1)" && \
     # Configure and make
     ./configure --disable-gui && \
     make "-j$(nproc)" && \
