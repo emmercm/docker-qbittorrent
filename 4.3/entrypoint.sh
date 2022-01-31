@@ -1,15 +1,20 @@
 #!/usr/bin/env sh
 set -euo pipefail
 
-PING_IP=${PING_IP:-1.1.1.1}
+PING_IPS=${PING_IPS:-1.1.1.1 1.0.0.1}
 IP_URL=${IP_URL:-http://whatismyip.akamai.com}
 
 
 # Wait for internet connection
 # Note: can't use `ping` due to a known issue (https://forums.docker.com/t/ping-from-within-a-container-does-not-actually-ping/11787)
 echo "Waiting for internet connection ..."
-while ! curl --silent --output /dev/null --max-time 1 ${PING_IP}; do
-    sleep 1s
+while true; do
+    for PING_IP in ${PING_IPS}; do
+        if curl --silent --output /dev/null --max-time 1 ${PING_IP}; then
+            break 2
+        fi
+    done
+    sleep 1
 done
 
 # Print external IP
