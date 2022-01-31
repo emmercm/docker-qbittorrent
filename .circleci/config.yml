@@ -62,7 +62,6 @@ jobs:
               GIT_DIFF_BASE="HEAD~"
             else
               CIRCLE_PR_NUMBER=${CIRCLE_PR_NUMBER:-$(echo "${CIRCLE_PULL_REQUEST}" | sed 's/.\+\///')}
-              echo https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pulls/${CIRCLE_PR_NUMBER}
               GIT_DIFF_BASE="origin/$(curl -s "https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pulls/${CIRCLE_PR_NUMBER}" | jq -r '.base.ref')"
             fi
             DIRECTORY_MODIFIED=$(git diff "${GIT_DIFF_BASE}" --name-only | grep '/' | sed 's/\/.\+//g' | grep "${DIRECTORY:-${VERSION%.*}}" || true)
