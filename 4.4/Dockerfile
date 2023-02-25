@@ -13,7 +13,7 @@ SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 
 # Build qbittorrent-nox
 # hadolint ignore=DL3003,DL3018
-RUN apk --update add --no-cache                              qt5-qtbase && \
+RUN apk --update add --no-cache                              qt6-qtbase && \
     apk --update add --no-cache --virtual build-dependencies boost-dev g++ gcc git make pkgconfig qt5-qttools-dev && \
     # Checkout from source
     cd "$(mktemp -d)" && \
