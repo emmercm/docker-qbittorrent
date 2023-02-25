@@ -21,7 +21,7 @@ RUN apk --update add --no-cache                              qt6-qtbase && \
     cd qBittorrent && \
     git checkout "$(git tag --sort=-version:refname | grep '\.[0-9]\+$' | grep "${VERSION}" | head -1)" && \
     # Configure and make
-    ./configure --disable-gui && \
+    QT_QMAKE="$(which qmake)" ./configure --disable-gui && \
     make "-j$(nproc)" && \
     make install && \
     # Remove temp files
