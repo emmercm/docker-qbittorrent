@@ -3,7 +3,7 @@
 #   https://github.com/qbittorrent/qBittorrent/wiki/Running-qBittorrent-without-X-server#compile-from-source---how-to-disable-qbittorrents-gui
 #   https://discourse.osmc.tv/t/howto-update-compile-qbittorrent-nox/19726/3
 
-FROM emmercm/libtorrent:1.0@sha256:d4fb2a3058c2472fb1fadb6b2ad102dd5b15d08623d42a4576937dbb0bfc88e3
+FROM emmercm/libtorrent:1.0@sha256:e60b7fb27c346987c4d5f2faa4e9ec04e35403fe20ca553533ed2ddb73ae2628
 
 ARG VERSION=3.3.[0-9]*
 
