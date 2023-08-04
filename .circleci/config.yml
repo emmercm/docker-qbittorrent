@@ -187,9 +187,6 @@ workflows:
       - lint:
           name: "4.0-lint"
           version: "4.0"
-      - lint:
-          name: "3.3-lint"
-          version: "3.3"
       - dummy:
           name: "lint"
           requires:
@@ -199,7 +196,6 @@ workflows:
             - "4.2-lint"
             - "4.1-lint"
             - "4.0-lint"
-            - "3.3-lint"
 
       # https://github.com/qbittorrent/qBittorrent/releases
       - build:
@@ -238,12 +234,6 @@ workflows:
           tags: 4.0 4.0-alpine
           requires:
             - "lint"
-      - build:
-          name: "3.3-build-test"
-          version: "3.3.16"
-          tags: 3.3 3.3-alpine 3 3-alpine
-          requires:
-            - "lint"
       - dummy:
           name: "test"
           requires:
@@ -253,7 +243,6 @@ workflows:
             - "4.2-build-test"
             - "4.1-build-test"
             - "4.0-build-test"
-            - "3.3-build-test"
       
       - push:
           requires:
