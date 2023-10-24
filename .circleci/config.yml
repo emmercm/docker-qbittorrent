@@ -170,6 +170,9 @@ workflows:
   build-test-push:
     jobs:
       - lint:
+          name: "4.6-lint"
+          version: "4.6"
+      - lint:
           name: "4.5-lint"
           version: "4.5"
       - lint:
@@ -193,6 +196,7 @@ workflows:
       - dummy:
           name: "lint"
           requires:
+            - "4.6-lint"
             - "4.5-lint"
             - "4.4-lint"
             - "4.3-lint"
@@ -203,9 +207,15 @@ workflows:
 
       # https://github.com/qbittorrent/qBittorrent/releases
       - build:
+          name: "4.6-build-test"
+          version: "4.6.0"
+          tags: 4.6 4.6-alpine 4 4-alpine latest
+          requires:
+            - "lint"
+      - build:
           name: "4.5-build-test"
           version: "4.5.5"
-          tags: 4.5 4.5-alpine 4 4-alpine latest
+          tags: 4.5 4.5-alpine
           requires:
             - "lint"
       - build:
@@ -247,6 +257,7 @@ workflows:
       - dummy:
           name: "test"
           requires:
+            - "4.6-build-test"
             - "4.5-build-test"
             - "4.4-build-test"
             - "4.3-build-test"
