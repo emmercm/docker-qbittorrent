@@ -208,7 +208,7 @@ workflows:
       # https://github.com/qbittorrent/qBittorrent/releases
       - build:
           name: "4.6-build-test"
-          version: "4.6.0"
+          version: "4.6.1"
           tags: 4.6 4.6-alpine 4 4-alpine latest
           requires:
             - "lint"
