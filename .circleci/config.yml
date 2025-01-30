@@ -7,7 +7,7 @@ references:
 executors:
   docker:
     docker:
-      - image: docker:latest
+      - image: docker:stable
 
 jobs:
   dummy:
@@ -72,8 +72,7 @@ jobs:
             # Otherwise halt job
             echo "Shortcutting the build of ${REPO_NAME}:${VERSION}"
             circleci-agent step halt
-      - setup_remote_docker:
-          version: 20.10.6
+      - setup_remote_docker
       - restore_cache:
           keys:
             - v4-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision }}
@@ -236,24 +235,6 @@ workflows:
           tags: 4.2 4.2-alpine
           requires:
             - "lint"
-      - build:
-          name: "4.1-build-test"
-          version: "4.1.9"
-          tags: 4.1 4.1-alpine
-          requires:
-            - "lint"
-      - build:
-          name: "4.0-build-test"
-          version: "4.0.4"
-          tags: 4.0 4.0-alpine
-          requires:
-            - "lint"
-      - build:
-          name: "3.3-build-test"
-          version: "3.3.16"
-          tags: 3.3 3.3-alpine 3 3-alpine
-          requires:
-            - "lint"
       - dummy:
           name: "test"
           requires:
@@ -262,9 +243,6 @@ workflows:
             - "4.4-build-test"
             - "4.3-build-test"
             - "4.2-build-test"
-            - "4.1-build-test"
-            - "4.0-build-test"
-            - "3.3-build-test"
       
       - push:
           requires:

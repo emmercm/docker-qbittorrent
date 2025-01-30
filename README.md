@@ -9,18 +9,18 @@
 
 Headless qBittorrent client with remote web interface.
 
-# Supported tags
+# Published versions
 
-| Tags | Layers | Size |
-|-|-|-|
-| `4.6.7`, `4.6.7-alpine`, `4.6`, `4.6-alpine`, `4`, `4-alpine`, `latest` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.6.7?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.6.7?icon=docker&label=size) |
-| `4.5.5`, `4.5.5-alpine`, `4.5`, `4.5-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.5.5?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.5.5?icon=docker&label=size) |
-| `4.4.5`, `4.4.5-alpine`, `4.4`, `4.4-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.4.5?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.4.5?icon=docker&label=size) |
-| `4.3.9`, `4.3.9-alpine`, `4.3`, `4.3-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.3.9?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.3.9?icon=docker&label=size) |
-| `4.2.5`, `4.2.5-alpine`, `4.2`, `4.2-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.2.5?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.2.5?icon=docker&label=size) |
-| `4.1.9`, `4.1.9-alpine`, `4.1`, `4.1-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.1.9?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.1.9?icon=docker&label=size) |
-| `4.0.4`, `4.0.4-alpine`, `4.0`, `4.0-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/4.0.4?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/4.0.4?icon=docker&label=size) |
-| `3.3.16`, `3.3.16-alpine`, `3.3`, `3.3-alpine`, `3`, `3-alpine` | ![](https://badgen.net/docker/layers/emmercm/qbittorrent/3.3.16?icon=docker&label=layers) | ![](https://badgen.net/docker/size/emmercm/qbittorrent/3.3.16?icon=docker&label=size) |
+| Tags | Size |
+|-|-|
+| `4.6.7`, `4.6.7-alpine`, `4.6`, `4.6-alpine`, `4`, `4-alpine`, `latest` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.6.7?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.6.7) |
+| `4.5.5`, `4.5.5-alpine`, `4.5`, `4.5-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.5.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.5.5) |
+| `4.4.5`, `4.4.5-alpine`, `4.4`, `4.4-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.4.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.4.5) |
+| `4.3.9`, `4.3.9-alpine`, `4.3`, `4.3-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.3.9?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.3.9) |
+| `4.2.5`, `4.2.5-alpine`, `4.2`, `4.2-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.2.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.2.5) |
+| <span title="Unmaintained">⚠️</span> `4.1.9`, `4.1.9-alpine`, `4.1`, `4.1-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.1.9?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.1.9) |
+| <span title="Unmaintained">⚠️</span> `4.0.4`, `4.0.4-alpine`, `4.0`, `4.0-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.0.4?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.0.4) |
+| <span title="Unmaintained">⚠️</span> `3.3.16`, `3.3.16-alpine`, `3.3`, `3.3-alpine`, `3`, `3-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/3.3.16?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=3.3.16) |
 
 # What is qBittorrent?
 
