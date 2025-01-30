@@ -7,7 +7,7 @@ references:
 executors:
   docker:
     docker:
-      - image: docker:stable
+      - image: cimg/base:current
 
 jobs:
   dummy:
