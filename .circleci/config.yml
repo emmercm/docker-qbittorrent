@@ -7,7 +7,7 @@ references:
 executors:
   docker:
     docker:
-      - image: cimg/base:current
+      - image: docker:stable
 
 jobs:
   dummy:
@@ -72,8 +72,7 @@ jobs:
             # Otherwise halt job
             echo "Shortcutting the build of ${REPO_NAME}:${VERSION}"
             circleci-agent step halt
-      - setup_remote_docker:
-          version: 20.10.6
+      - setup_remote_docker
       - restore_cache:
           keys:
             - v4-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision }}
