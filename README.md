@@ -13,7 +13,7 @@ Headless qBittorrent client with remote web interface.
 
 | Tags | Size |
 |-|-|
-| `4.6.6`, `4.6.6-alpine`, `4.6`, `4.6-alpine`, `4`, `4-alpine`, `latest` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.6.6?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.6.6) |
+| `4.6.7`, `4.6.7-alpine`, `4.6`, `4.6-alpine`, `4`, `4-alpine`, `latest` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.6.7?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.6.7) |
 | `4.5.5`, `4.5.5-alpine`, `4.5`, `4.5-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.5.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.5.5) |
 | `4.4.5`, `4.4.5-alpine`, `4.4`, `4.4-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.4.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.4.5) |
 | `4.3.9`, `4.3.9-alpine`, `4.3`, `4.3-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.3.9?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.3.9) |
