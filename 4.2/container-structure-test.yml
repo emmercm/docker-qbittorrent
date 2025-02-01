@@ -1,5 +1,13 @@
 schemaVersion: 2.0.0
 
+fileExistenceTests:
+  - name: "qBittorrent/"
+    path: /root/.config/qBittorrent
+    shouldExist: true
+  - name: "qBittorrent.conf"
+    path: /root/.config/qBittorrent/qBittorrent.conf
+    shouldExist: false
+
 commandTests:
   - name: "entrypoint.sh"
     command: "./entrypoint.sh"

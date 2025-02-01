@@ -30,6 +30,7 @@ RUN apk --update add --no-cache                              qt5-qtbase && \
     rm -rf /tmp/* && \
     # Test build
     qbittorrent-nox -v && \
+    rm ~/.config/qBittorrent/qBittorrent.conf && \
     # Make directories, and symlink them for quality of life
     mkdir -p ~/.config/qBittorrent && \
     mkdir -p ~/.local/share/qBittorrent && \
