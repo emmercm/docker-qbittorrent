@@ -1,0 +1,35 @@
+schemaVersion: 2.0.0
+
+fileExistenceTests:
+  - name: "qBittorrent.conf"
+    path: ~/.config/qBittorrent/qBittorrent.conf
+    shouldExist: false
+
+commandTests:
+  - name: "entrypoint.sh"
+    command: "./entrypoint.sh"
+    args: ["echo", "ok"]
+    expectedOutput: ["ok"]
+    excludedError: [".+"]
+    exitCode: 0
+
+  - name: "which qbittorrent-nox"
+    command: "which"
+    args: ["qbittorrent-nox"]
+    expectedOutput: ["/usr/bin/qbittorrent-nox"]
+    excludedError: [".+"]
+    exitCode: 0
+
+  - name: "qbittorrent-nox --version"
+    command: "qbittorrent-nox"
+    args: ["--version"]
+    expectedOutput: ["qBittorrent v5.0"]
+    excludedError: [".+"]
+    exitCode: 0
+
+  - name: "./entrypoint.sh qbittorrent-nox --daemon"
+    command: "./entrypoint.sh"
+    args: ["qbittorrent-nox", "--daemon"]
+    expectedOutput: ["Waiting for internet connection", "External IP"]
+    excludedError: [".+"]
+    exitCode: 0
