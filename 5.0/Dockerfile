@@ -2,7 +2,7 @@
 #   https://github.com/qbittorrent/qBittorrent/wiki/Compilation-Alpine-Linux
 #   https://github.com/qbittorrent/qBittorrent/wiki/Compilation-with-CMake-common-information
 
-FROM emmercm/libtorrent:2.0@sha256:b88d8cfc6dc278c8abce0e9ef8c2be0c782eebfb3e2b9a4d1567fdf66690556e
+FROM emmercm/libtorrent:2.0@sha256:b1fe36575bf2a8066367b49bcd67e4e3633cd37e81207203a00443634740df4e
 
 ARG VERSION=5.0.[0-9]\\+
 
