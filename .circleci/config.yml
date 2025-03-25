@@ -211,7 +211,7 @@ workflows:
       # https://github.com/qbittorrent/qBittorrent/releases
       - build:
           name: "5.0-build-test"
-          version: "5.0.3"
+          version: "5.0.4"
           tags: 5.0 5.0-alpine 4 4-alpine latest
           requires:
             - "lint"
