@@ -2,7 +2,7 @@
 #   https://github.com/qbittorrent/qBittorrent/wiki/Compilation-Alpine-Linux
 #   https://github.com/qbittorrent/qBittorrent/wiki/Compilation-with-CMake-common-information
 
-FROM emmercm/libtorrent:2.0@sha256:b1fe36575bf2a8066367b49bcd67e4e3633cd37e81207203a00443634740df4e
+FROM emmercm/libtorrent:2.0@sha256:999cb4120aae23aead3f59722f7df2ca82ee8b8b5da7701a54e64dbac25f749c
 
 ARG VERSION=5.0.[0-9]\\+
 
@@ -14,7 +14,7 @@ RUN apk --update add --no-cache                              qt6-qtbase && \
     apk --update add --no-cache --virtual build-dependencies \
         # https://github.com/qbittorrent/qBittorrent/wiki/Compilation-Alpine-Linux
         build-base cmake curl git linux-headers ninja-build ninja-is-really-ninja python3 re2c tar xz \
-        build-dependencies icu-dev openssl-dev qt6-qtbase-dev qt6-qttools-dev zlib-dev \
+        build-dependencies icu-dev openssl-dev qt6-qtbase-dev qt6-qtbase-private-dev qt6-qttools-dev zlib-dev \
         # Undocumented qBittorrent dependencies
         boost-dev \
         # Other build dependencies
