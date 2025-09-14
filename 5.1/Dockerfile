@@ -14,7 +14,7 @@ RUN apk --update add --no-cache                              qt6-qtbase && \
     apk --update add --no-cache --virtual build-dependencies \
         # https://github.com/qbittorrent/qBittorrent/wiki/Compilation-Alpine-Linux
         build-base cmake curl git linux-headers ninja-build ninja-is-really-ninja python3 re2c tar xz \
-        build-dependencies icu-dev openssl-dev qt6-qtbase-dev qt6-qttools-dev zlib-dev \
+        build-dependencies icu-dev openssl-dev qt6-qtbase-dev qt6-qtbase-private-dev qt6-qttools-dev zlib-dev \
         # Undocumented qBittorrent dependencies
         boost-dev \
         # Other build dependencies
