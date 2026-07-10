@@ -36,6 +36,8 @@ RUN apk --update add --no-cache                              qt6-qtbase && \
         awk '{print $2}' \
     )" --depth 1 https://github.com/qbittorrent/qBittorrent.git && \
     cd qBittorrent && \
+    # Fix qBittorrent 5.0.x not finding Qt6::CorePrivate for Qt v6.10+
+    sed -i 's/REQUIRED COMPONENTS Core Network/REQUIRED COMPONENTS Core CorePrivate Network/' cmake/Modules/CheckPackages.cmake && \
     # Configure and make
     mkdir build-nox && \
     cd build-nox && \
