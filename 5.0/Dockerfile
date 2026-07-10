@@ -2,7 +2,7 @@
 #   https://github.com/qbittorrent/qBittorrent/wiki/Compilation-Alpine-Linux
 #   https://github.com/qbittorrent/qBittorrent/wiki/Compilation-with-CMake-common-information
 
-FROM emmercm/libtorrent:2.0@sha256:07475845d1bb171cea3e2fa91a22c8615501d1ef10c45c0df471fb38a4090aa4
+FROM emmercm/libtorrent:2.0@sha256:8246bd3857042d571a6fe20c7cdf67de65da10104ed3e9ec6618e676de16133a
 
 ARG VERSION=5.0.[0-9]\\+
 
@@ -36,6 +36,8 @@ RUN apk --update add --no-cache                              qt6-qtbase && \
         awk '{print $2}' \
     )" --depth 1 https://github.com/qbittorrent/qBittorrent.git && \
     cd qBittorrent && \
+    # Fix qBittorrent 5.0.x not finding Qt6::CorePrivate for Qt v6.10+
+    sed -i 's/REQUIRED COMPONENTS Core Network/REQUIRED COMPONENTS Core CorePrivate Network/' cmake/Modules/CheckPackages.cmake && \
     # Configure and make
     mkdir build-nox && \
     cd build-nox && \
