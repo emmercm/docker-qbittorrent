@@ -1,4 +1,4 @@
-[![](https://raw.githubusercontent.com/emmercm/docker-qbittorrent/assets/qbittorrent.png)](https://www.qbittorrent.org/)
+[![qBittorrent logo](https://raw.githubusercontent.com/emmercm/docker-qbittorrent/assets/qbittorrent.png)](https://www.qbittorrent.org/)
 
 [![](https://badgen.net/badge/emmercm/qbittorrent/blue?icon=docker)](https://hub.docker.com/r/emmercm/qbittorrent)
 [![](https://badgen.net/docker/pulls/emmercm/qbittorrent?icon=docker&label=pulls)](https://hub.docker.com/r/emmercm/qbittorrent)
@@ -17,10 +17,10 @@ Headless qBittorrent client with remote web interface.
 | `5.1.4`, `5.1.4-alpine`, `5.1`, `5.1-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/5.1.4?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=5.1.4) |
 | `5.0.5`, `5.0.5-alpine`, `5.0`, `5.0-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/5.0.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=5.0.5) |
 | `4.6.7`, `4.6.7-alpine`, `4.6`, `4.6-alpine`, `4`, `4-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.6.7?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.6.7) |
-| <span title="Image no longer maintained">⚠️</span> `4.5.5`, `4.5.5-alpine`, `4.5`, `4.5-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.5.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.5.5) |
-| <span title="Image no longer maintained">⚠️</span> `4.4.5`, `4.4.5-alpine`, `4.4`, `4.4-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.4.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.4.5) |
-| <span title="Image no longer maintained">⚠️</span> `4.3.9`, `4.3.9-alpine`, `4.3`, `4.3-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.3.9?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.3.9) |
-| <span title="Image no longer maintained">⚠️</span> `4.2.5`, `4.2.5-alpine`, `4.2`, `4.2-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.2.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.2.5) |
+| `4.5.5`, `4.5.5-alpine`, `4.5`, `4.5-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.5.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.5.5) |
+| `4.4.5`, `4.4.5-alpine`, `4.4`, `4.4-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.4.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.4.5) |
+| `4.3.9`, `4.3.9-alpine`, `4.3`, `4.3-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.3.9?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.3.9) |
+| `4.2.5`, `4.2.5-alpine`, `4.2`, `4.2-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.2.5?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.2.5) |
 | <span title="Image no longer maintained">⚠️</span> `4.1.9`, `4.1.9-alpine`, `4.1`, `4.1-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.1.9?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.1.9) |
 | <span title="Image no longer maintained">⚠️</span> `4.0.4`, `4.0.4-alpine`, `4.0`, `4.0-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/4.0.4?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=4.0.4) |
 | <span title="Image no longer maintained">⚠️</span> `3.3.16`, `3.3.16-alpine`, `3.3`, `3.3-alpine`, `3`, `3-alpine` | [![](https://img.shields.io/docker/image-size/emmercm/qbittorrent/3.3.16?logo=docker&logoColor=white&label=size)](https://hub.docker.com/r/emmercm/qbittorrent/tags?name=3.3.16) |
@@ -65,7 +65,7 @@ Usage:
 ```bash
 mkdir config downloads incomplete
 docker run \
-    --publish 8080:8080 \
+    --publish 8080:8080/tcp \
     --publish 6881:6881/tcp \
     --publish 6881:6881/udp \
     --volume "$PWD/config:/config" \
