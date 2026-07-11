@@ -115,6 +115,7 @@ jobs:
               echo "${DIRECTORY}: ${REPO_NAME}:${VERSION} not yet published, building"
             else
               echo "${DIRECTORY}: unchanged and already published, skipping"
+              continue
             fi
             SELECTED=$(jq -c ". + [${ENTRY}]" <<< "${SELECTED}")
           done < <(jq -c '.[]' <<< "${CANDIDATES}")
