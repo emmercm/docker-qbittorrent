@@ -7,10 +7,6 @@
   "automerge": true,
   "packageRules": [
     {
-      "paths": [".circleci/**"],
-      "enabled": false
-    },
-    {
       "paths": ["**/Dockerfile"],
       "major": {
         "enabled": false
