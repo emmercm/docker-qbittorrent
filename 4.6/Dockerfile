@@ -3,43 +3,54 @@
 #   https://github.com/qbittorrent/qBittorrent/wiki/Running-qBittorrent-without-X-server#compile-from-source---how-to-disable-qbittorrents-gui
 #   https://discourse.osmc.tv/t/howto-update-compile-qbittorrent-nox/19726/3
 
-FROM emmercm/libtorrent:2.0@sha256:813289983b76576a0fd65ce03eb4be164eae24337da7ccd0b8e1f5b83c991d11
+FROM emmercm/libtorrent:2.0@sha256:813289983b76576a0fd65ce03eb4be164eae24337da7ccd0b8e1f5b83c991d11 AS build
 
-ARG VERSION=4.6.[0-9]*
-
-COPY entrypoint.sh qBittorrent.conf /
+ARG VERSION=4.6.[0-9]\\+
 
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 
-# Build qbittorrent-nox
-# hadolint ignore=DL3003,DL3018
-RUN apk --update add --no-cache                              qt5-qtbase && \
-    apk --update add --no-cache --virtual build-dependencies boost-dev g++ gcc git make pkgconfig qt5-qttools-dev && \
-    # Checkout from source
-    cd "$(mktemp -d)" && \
-    git clone https://github.com/qbittorrent/qBittorrent.git && \
-    cd qBittorrent && \
-    git checkout "$(git tag --sort=-version:refname | grep '\.[0-9]\+$' | grep "${VERSION}" | head -1)" && \
-    # Configure and make
+# Build dependencies
+# hadolint ignore=DL3018
+RUN apk add --no-cache boost-dev coreutils g++ gcc git make pkgconfig qt5-qttools-dev
+
+# Checkout from source
+RUN git clone --branch "$( \
+        git ls-remote --tags --refs https://github.com/qbittorrent/qBittorrent.git | \
+        awk -F'refs/tags/' '{print $2" "$2}' | \
+        # Get rid of prefixes
+        sed 's/^release[^0-9]//i' | \
+        sed 's/^v//i' | \
+        # Make sure patch version exists
+        sed 's/^\([0-9]\+\.[0-9]\+\)\([^0-9.].\+\)/\1.0\2/' | \
+        # Get the right version
+        sort --version-sort --key=1,1 | \
+        grep "^${VERSION}" | \
+        tail -1 | \
+        awk '{print $2}' \
+    )" --depth 1 https://github.com/qbittorrent/qBittorrent.git
+
+# Configure and make
+# hadolint ignore=DL3003
+RUN cd qBittorrent && \
     ./configure --disable-gui && \
     make "-j$(nproc)" && \
-    make install && \
-    # Remove temp files
-    cd && \
-    apk del --purge build-dependencies && \
-    rm -rf /tmp/* && \
-    # Test build
-    qbittorrent-nox -v && \
-    rm ~/.config/qBittorrent/qBittorrent.conf && \
-    # Make directories, and symlink them for quality of life
-    mkdir -p ~/.config/qBittorrent && \
-    mkdir -p ~/.local/share/qBittorrent && \
-    mkdir /downloads && \
-    mkdir /incomplete && \
+    make install INSTALL_ROOT=/staging
+
+# Staged alongside the build output so the final stage needs only one COPY
+COPY entrypoint.sh qBittorrent.conf /staging/
+
+FROM emmercm/libtorrent:2.0@sha256:813289983b76576a0fd65ce03eb4be164eae24337da7ccd0b8e1f5b83c991d11
+
+SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
+
+# Install container and entrypoint dependencies, make directories, and symlink them for quality of life
+# hadolint ignore=DL3018
+RUN apk add --no-cache qt5-qtbase curl dumb-init tzdata && \
+    mkdir -p ~/.config/qBittorrent ~/.local/share/qBittorrent /downloads /incomplete && \
     ln -s ~/.config/qBittorrent /config && \
-    ln -s ~/.local/share/qBittorrent /data && \
-    # Install container and entrypoint dependencies
-    apk --update add --no-cache curl dumb-init tzdata
+    ln -s ~/.local/share/qBittorrent /data
+
+COPY --from=build /staging /
 
 VOLUME ["/config", "/data", "/downloads", "/incomplete"]
 
