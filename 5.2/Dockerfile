@@ -2,28 +2,27 @@
 #   https://github.com/qbittorrent/qBittorrent/wiki/Compilation-Alpine-Linux
 #   https://github.com/qbittorrent/qBittorrent/wiki/Compilation-with-CMake-common-information
 
-FROM emmercm/libtorrent:2.0@sha256:813289983b76576a0fd65ce03eb4be164eae24337da7ccd0b8e1f5b83c991d11
+FROM emmercm/libtorrent:2.0@sha256:813289983b76576a0fd65ce03eb4be164eae24337da7ccd0b8e1f5b83c991d11 AS build
 
 ARG VERSION=5.2.[0-9]\\+
 
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 
-# Build qbittorrent-nox
-# hadolint ignore=DL3003,DL3018
-RUN apk --update add --no-cache                              qt6-qtbase && \
-    apk --update add --no-cache --virtual build-dependencies \
+# Build dependencies
+# hadolint ignore=DL3018
+RUN apk add --no-cache \
         # https://github.com/qbittorrent/qBittorrent/wiki/Compilation-Alpine-Linux
         build-base cmake curl git linux-headers ninja-build ninja-is-really-ninja python3 re2c tar xz \
-        build-dependencies icu-dev openssl-dev qt6-qtbase-dev qt6-qtbase-private-dev qt6-qttools-dev zlib-dev \
+        icu-dev openssl-dev qt6-qtbase-dev qt6-qtbase-private-dev qt6-qttools-dev zlib-dev \
         # Undocumented qBittorrent dependencies
         boost-dev \
         # Other build dependencies
-        coreutils jq git && \
-    # Checkout from source
-    cd "$(mktemp -d)" && \
-    git clone --branch "$( \
-        wget -qO - "https://api.github.com/repos/qbittorrent/qBittorrent/tags?per_page=100" | jq -r '.[].name' | \
-        awk '{print $1" "$1}' | \
+        coreutils
+
+# Checkout from source
+RUN git clone --branch "$( \
+        git ls-remote --tags --refs https://github.com/qbittorrent/qBittorrent.git | \
+        awk -F'refs/tags/' '{print $2" "$2}' | \
         # Get rid of prefixes
         sed 's/^release[^0-9]//i' | \
         sed 's/^v//i' | \
@@ -34,9 +33,11 @@ RUN apk --update add --no-cache                              qt6-qtbase && \
         grep "^${VERSION}" | \
         tail -1 | \
         awk '{print $2}' \
-    )" --depth 1 https://github.com/qbittorrent/qBittorrent.git && \
-    cd qBittorrent && \
-    # Configure and make
+    )" --depth 1 https://github.com/qbittorrent/qBittorrent.git
+
+# Configure and make
+# hadolint ignore=DL3003
+RUN cd qBittorrent && \
     mkdir build-nox && \
     cd build-nox && \
     cmake \
@@ -65,26 +66,23 @@ RUN apk --update add --no-cache                              qt6-qtbase && \
         (sleep 5 && ninja) || \
         (sleep 5 && ninja) \
     ) && \
-    ninja install && \
-    cd .. && \
-    # Remove temp files
-    cd && \
-    apk del --purge build-dependencies && \
-    rm -rf /tmp/* && \
-    # Test build
-    qbittorrent-nox --version && \
-    rm ~/.config/qBittorrent/qBittorrent.conf && \
-    # Make directories, and symlink them for quality of life
-    mkdir -p ~/.config/qBittorrent && \
-    mkdir -p ~/.local/share/qBittorrent && \
-    mkdir /downloads && \
-    mkdir /incomplete && \
-    ln -s ~/.config/qBittorrent /config && \
-    ln -s ~/.local/share/qBittorrent /data && \
-    # Install container and entrypoint dependencies
-    apk --update add --no-cache curl dumb-init tzdata
+    DESTDIR=/staging ninja install
 
-COPY entrypoint.sh qBittorrent.conf /
+# Staged alongside the build output so the final stage needs only one COPY
+COPY entrypoint.sh qBittorrent.conf /staging/
+
+FROM emmercm/libtorrent:2.0@sha256:813289983b76576a0fd65ce03eb4be164eae24337da7ccd0b8e1f5b83c991d11
+
+SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
+
+# Install container and entrypoint dependencies, make directories, and symlink them for quality of life
+# hadolint ignore=DL3018
+RUN apk add --no-cache qt6-qtbase curl dumb-init tzdata && \
+    mkdir -p ~/.config/qBittorrent ~/.local/share/qBittorrent /downloads /incomplete && \
+    ln -s ~/.config/qBittorrent /config && \
+    ln -s ~/.local/share/qBittorrent /data
+
+COPY --from=build /staging /
 
 VOLUME ["/config", "/data", "/downloads", "/incomplete"]
 

@@ -57,7 +57,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      # build job's matrix: cross product of selected directories and platforms
+      # build job's matrix: flat include list, one entry per (directory, arch)
       build_matrix: ${{ steps.select.outputs.build_matrix }}
       # merge job's matrix: selected directories only (one manifest list per directory)
       merge_matrix: ${{ steps.select.outputs.merge_matrix }}
@@ -65,6 +65,17 @@ jobs:
       has_builds: ${{ steps.select.outputs.has_builds }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Needed for `docker buildx imagetools inspect` to read the libtorrent base and
+      # published-tag manifests when detecting architectures.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4
 
       - name: Detect changed directories
         uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4
@@ -105,35 +116,95 @@ jobs:
               {"directory": "5.2", "version": "5.2.3", "tags": "5.2 5.2-alpine 5 5-alpine latest"}
             ]
         run: |
-          SELECTED='[]'
+          # Each platform builds on the closest runner architecture to minimize QEMU
+          # emulation: amd64 (and 386, which x86-64 runs in hardware) on amd64, and the
+          # arm variants on ARM hosts (arm64v8 natively; armv7/armv6 via aarch32 emulation).
+          # The remaining arches (ppc64le, s390x, riscv64) have no native runner and are
+          # fully emulated.
+          runner_for() {
+            case "$1" in
+              linux/arm*) echo "ubuntu-24.04-arm" ;;
+              *) echo "ubuntu-latest" ;;
+            esac
+          }
+
+          # Slug: strip leading "linux/", drop remaining slashes (linux/arm/v7 -> armv7).
+          slug_for() {
+            local p="${1#linux/}"
+            echo "${p//\//}"
+          }
+
+          # Print one "os/arch[/variant]" line per real platform in an image's manifest,
+          # dropping attestation entries (platform.os == "unknown"). Non-zero if the
+          # image ref cannot be inspected (e.g. the tag does not exist).
+          platforms_of() {
+            docker buildx imagetools inspect --raw "$1" 2>/dev/null \
+              | jq -r '.manifests[]?
+                  | select(.platform.os != null and .platform.os != "unknown")
+                  | .platform
+                  | .os + "/" + .architecture
+                    + (if (.variant // "") == "" then "" else "/" + .variant end)'
+          }
+
+          # Apply containerd's default-variant rule so a base image's "arm64/v8" compares
+          # equal to a buildx-pushed image's normalized "arm64". Without this, arm64 would
+          # always look missing and every directory would rebuild forever.
+          canonical() {
+            sed -E 's#^linux/arm64/v8$#linux/arm64#'
+          }
+
+          BUILD='[]'
+          MERGE='[]'
           while read -r ENTRY; do
             DIRECTORY=$(jq -r '.directory' <<< "${ENTRY}")
             VERSION=$(jq -r '.version' <<< "${ENTRY}")
+
+            # Expected arches come from the directory's pinned libtorrent base image.
+            # tail -1 selects the final stage's FROM, not the build stage's.
+            BASE_REF=$(grep -iE '^FROM emmercm/libtorrent:' "${DIRECTORY}/Dockerfile" | tail -1 | awk '{print $2}')
+            EXPECTED=$(platforms_of "${BASE_REF}" | sort -u)
+            if [[ -z "${EXPECTED}" ]]; then
+              echo "::error::Could not determine architectures for ${DIRECTORY} from ${BASE_REF}"
+              exit 1
+            fi
+
             if jq -e --arg d "${DIRECTORY}" 'index($d) != null' <<< "${CHANGED}" > /dev/null; then
               echo "${DIRECTORY}: files changed, building"
-            elif ! curl -fsS "https://hub.docker.com/v2/repositories/${REPO_NAME}/tags/${VERSION}" &> /dev/null; then
-              echo "${DIRECTORY}: ${REPO_NAME}:${VERSION} not yet published, building"
             else
-              echo "${DIRECTORY}: unchanged and already published, skipping"
-              continue
+              PUBLISHED=$(platforms_of "${REPO_NAME}:${VERSION}" | canonical | sort -u || true)
+              if [[ -z "${PUBLISHED}" ]]; then
+                echo "${DIRECTORY}: ${REPO_NAME}:${VERSION} not yet published, building"
+              else
+                MISSING=$(comm -23 <(printf '%s\n' "${EXPECTED}" | canonical) <(printf '%s\n' "${PUBLISHED}"))
+                if [[ -n "${MISSING}" ]]; then
+                  echo "${DIRECTORY}: ${REPO_NAME}:${VERSION} building; architectures missing:"
+                  printf '%s\n' "${MISSING}" | sed 's/^/  /'
+                else
+                  echo "${DIRECTORY}: unchanged and all arches published, skipping"
+                  continue
+                fi
+              fi
             fi
-            SELECTED=$(jq -c ". + [${ENTRY}]" <<< "${SELECTED}")
+
+            # Selected: record the directory for merge, and one build entry per arch.
+            MERGE=$(jq -c ". + [${ENTRY}]" <<< "${MERGE}")
+            while read -r PLATFORM; do
+              [[ -z "${PLATFORM}" ]] && continue
+              BUILD=$(jq -c \
+                --arg directory "${DIRECTORY}" \
+                --arg version "${VERSION}" \
+                --arg platform "${PLATFORM}" \
+                --arg runner "$(runner_for "${PLATFORM}")" \
+                --arg slug "$(slug_for "${PLATFORM}")" \
+                '. + [{directory: $directory, version: $version, platform: $platform, runner: $runner, slug: $slug}]' \
+                <<< "${BUILD}")
+            done <<< "${EXPECTED}"
           done < <(jq -c '.[]' <<< "${CANDIDATES}")
 
-          # Each platform builds on the closest runner architecture to minimize QEMU
-          # emulation: amd64 natively on amd64, and the arm variants on ARM hosts
-          # (arm64v8 natively; armv7/armv6 via aarch32 emulation).
-          PLATFORMS='[
-            {"name": "linux/amd64",    "slug": "amd64",   "runner": "ubuntu-latest"},
-            {"name": "linux/arm64/v8", "slug": "arm64v8", "runner": "ubuntu-24.04-arm"},
-            {"name": "linux/arm/v7",   "slug": "armv7",   "runner": "ubuntu-24.04-arm"},
-            {"name": "linux/arm/v6",   "slug": "armv6",   "runner": "ubuntu-24.04-arm"}
-          ]'
-
-          echo "Selected directories: ${SELECTED}"
-          echo "merge_matrix={\"include\":${SELECTED}}" >> "${GITHUB_OUTPUT}"
-          echo "build_matrix={\"entry\":${SELECTED},\"platform\":$(jq -c . <<< "${PLATFORMS}")}" >> "${GITHUB_OUTPUT}"
-          if [[ "${SELECTED}" == "[]" ]]; then
+          echo "Selected build matrix: ${BUILD}"
+          echo "build_matrix={\"include\":${BUILD}}" >> "${GITHUB_OUTPUT}"
+          echo "merge_matrix={\"include\":${MERGE}}" >> "${GITHUB_OUTPUT}"
+          if [[ "${BUILD}" == "[]" ]]; then
             echo "has_builds=false" >> "${GITHUB_OUTPUT}"
           else
             echo "has_builds=true" >> "${GITHUB_OUTPUT}"
@@ -147,16 +218,16 @@ jobs:
       - lint
       - setup
     if: needs.setup.outputs.has_builds == 'true'
-    runs-on: ${{ matrix.platform.runner }}
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.setup.outputs.build_matrix) }}
     env:
-      DIRECTORY: ${{ matrix.entry.directory }}
-      VERSION: ${{ matrix.entry.version }}
-      PLATFORM: ${{ matrix.platform.name }}
+      DIRECTORY: ${{ matrix.directory }}
+      VERSION: ${{ matrix.version }}
+      PLATFORM: ${{ matrix.platform }}
       # Cache scope keeps each directory+platform's layers separate
-      CACHE_SCOPE: ${{ matrix.entry.directory }}-${{ matrix.platform.slug }}
+      CACHE_SCOPE: ${{ matrix.directory }}-${{ matrix.slug }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
@@ -166,6 +237,18 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4
+
+      # Must come before the test build below, which pulls the pinned libtorrent base --
+      # otherwise that pull is anonymous and counts against Docker Hub's pull limit, from
+      # every job in the matrix. Not gated on master: PR runs pull the base too, and it is
+      # the pull that needs authenticating, not the push. Fork PRs get no secrets and fall
+      # back to anonymous.
+      - name: Log in to Docker Hub
+        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build image for testing
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
@@ -192,13 +275,6 @@ jobs:
           sudo mv "container-structure-test-linux-${CST_ARCH}" /usr/local/bin/container-structure-test
           container-structure-test test --config "${DIRECTORY}/container-structure-test.yml" --image "${REPO_NAME}:${VERSION}"
 
-      - name: Log in to Docker Hub
-        if: github.ref == 'refs/heads/master'
-        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Push image by digest
         id: push
         if: github.ref == 'refs/heads/master'
@@ -215,13 +291,13 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: |
           mkdir -p digests
-          echo "${{ steps.push.outputs.digest }}" > "digests/${{ matrix.platform.slug }}"
+          echo "${{ steps.push.outputs.digest }}" > "digests/${{ matrix.slug }}"
 
       - name: Upload digest
         if: github.ref == 'refs/heads/master'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: digests-${{ matrix.entry.directory }}-${{ matrix.platform.slug }}
+          name: digests-${{ matrix.directory }}-${{ matrix.slug }}
           path: digests/*
           if-no-files-found: error
 
