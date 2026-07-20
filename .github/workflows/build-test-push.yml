@@ -44,7 +44,7 @@ jobs:
           - "5.1"
           - "5.2"
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Run hadolint
         # Pinned to a full version: hadolint-action does not publish a moving major tag
         uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5 # v3.3.0
@@ -64,7 +64,7 @@ jobs:
       # whether any directory was selected to build at all
       has_builds: ${{ steps.select.outputs.has_builds }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Log in to Docker Hub
         uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4
@@ -229,7 +229,7 @@ jobs:
       # Cache scope keeps each directory+platform's layers separate
       CACHE_SCOPE: ${{ matrix.directory }}-${{ matrix.slug }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       # Needed to run the armv7/armv6 (aarch32) images on the arm64 host during testing
       - name: Set up QEMU
@@ -354,7 +354,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Read short description from README
         id: readme
