@@ -2,7 +2,7 @@
 #   https://github.com/qbittorrent/qBittorrent/wiki/Compilation-Alpine-Linux
 #   https://github.com/qbittorrent/qBittorrent/wiki/Compilation-with-CMake-common-information
 
-FROM emmercm/libtorrent:2.1@sha256:153526d0e862423f7a3beff224a1806f8c764f8863d2a1cd9f92f6dfa64f6c94 AS build
+FROM emmercm/libtorrent:2.1@sha256:24753f345cf6b491adc5aa701385d9283e4fedcdc3eba4bdb06d52d97e4fb14e AS build
 
 ARG VERSION=5.3.[0-9]\\+
 
@@ -71,7 +71,7 @@ RUN cd qBittorrent && \
 # Staged alongside the build output so the final stage needs only one COPY
 COPY entrypoint.sh qBittorrent.conf /staging/
 
-FROM emmercm/libtorrent:2.1@sha256:153526d0e862423f7a3beff224a1806f8c764f8863d2a1cd9f92f6dfa64f6c94
+FROM emmercm/libtorrent:2.1@sha256:24753f345cf6b491adc5aa701385d9283e4fedcdc3eba4bdb06d52d97e4fb14e
 
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 
