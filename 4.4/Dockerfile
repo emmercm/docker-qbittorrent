@@ -3,7 +3,7 @@
 #   https://github.com/qbittorrent/qBittorrent/wiki/Running-qBittorrent-without-X-server#compile-from-source---how-to-disable-qbittorrents-gui
 #   https://discourse.osmc.tv/t/howto-update-compile-qbittorrent-nox/19726/3
 
-FROM emmercm/libtorrent:2.0@sha256:6f814858981674abdd22817949caf51e2fd10d63b37c210b2b05093fe228b255 AS build
+FROM emmercm/libtorrent:2.0@sha256:68c6e62adbd8237ed70daf4004f4400ad840cac174f9d17f3e38eabfb54d2083 AS build
 
 ARG VERSION=4.4.[0-9]\\+
 
@@ -39,7 +39,7 @@ RUN cd qBittorrent && \
 # Staged alongside the build output so the final stage needs only one COPY
 COPY entrypoint.sh qBittorrent.conf /staging/
 
-FROM emmercm/libtorrent:2.0@sha256:6f814858981674abdd22817949caf51e2fd10d63b37c210b2b05093fe228b255
+FROM emmercm/libtorrent:2.0@sha256:68c6e62adbd8237ed70daf4004f4400ad840cac174f9d17f3e38eabfb54d2083
 
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 
