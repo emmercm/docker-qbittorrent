@@ -22,9 +22,9 @@ RUN git clone --branch "$( \
         sed 's/^v//i' | \
         # Make sure patch version exists
         sed 's/^\([0-9]\+\.[0-9]\+\)\([^0-9.].\+\)/\1.0\2/' | \
-        # Get the right version
+        # Get the right version, excluding pre-releases such as "5.3.0rc1" (which version-sort after "5.3.0")
         sort --version-sort --key=1,1 | \
-        grep "^${VERSION}" | \
+        grep "^${VERSION}\(\.[0-9]\+\)* " | \
         tail -1 | \
         awk '{print $2}' \
     )" --depth 1 https://github.com/qbittorrent/qBittorrent.git

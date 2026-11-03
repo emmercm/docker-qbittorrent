@@ -26,8 +26,53 @@ commandTests:
   - name: "qbittorrent-nox --version"
     command: "qbittorrent-nox"
     args: ["--version"]
-    expectedOutput: ["qBittorrent v4.6"]
+    # Release versions only, not pre-releases such as "v5.3.0rc1"
+    expectedOutput: ["^qBittorrent v4\\.6\\.[0-9]+(\\.[0-9]+)*\\s*$"]
     excludedError: [".+"]
+    exitCode: 0
+
+  # Start qBittorrent in the foreground (without the entrypoint's internet check), and make
+  # sure the WebUI responds and the process is still running
+  - name: "qbittorrent-nox starts up"
+    command: "sh"
+    args:
+      - "-c"
+      - |
+        set -eu
+        cp /qBittorrent.conf /config/qBittorrent.conf
+        # Always print qBittorrent's output, even if the checks below fail
+        trap 'cat /tmp/qbittorrent.out' EXIT
+        qbittorrent-nox > /tmp/qbittorrent.out 2>&1 &
+        PID=$!
+        for _ in $(seq 1 30); do
+            curl --silent --fail --output /dev/null http://localhost:8080/ && break
+            sleep 1
+        done
+        curl --silent --fail --output /dev/null --write-out "WebUI HTTP %{http_code}\n" http://localhost:8080/ || true
+        kill -0 "${PID}" && echo "qbittorrent-nox is running"
+        kill "${PID}"
+        wait "${PID}" || true
+    expectedOutput: ["WebUI HTTP 200", "qbittorrent-nox is running"]
+    exitCode: 0
+
+  # qBittorrent v4.4+ can store resume data in an SQLite database, and fails to start
+  # without the QSQLITE driver
+  - name: "qbittorrent-nox stores resume data in SQLite"
+    command: "sh"
+    args:
+      - "-c"
+      - |
+        set -eu
+        # Always print qBittorrent's log, even if the checks below fail
+        trap 'cat /data/logs/qbittorrent.log 2>/dev/null || true' EXIT
+        cp /qBittorrent.conf /config/qBittorrent.conf
+        grep -q '^\[BitTorrent\]$' /config/qBittorrent.conf || printf '\n[BitTorrent]\n' >> /config/qBittorrent.conf
+        sed -i 's/^\[BitTorrent\]$/&\nSession\\ResumeDataStorageType=SQLite/' /config/qBittorrent.conf
+        timeout 10 qbittorrent-nox "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567" 2>&1
+        test -f /data/torrents.db
+        echo "torrents.db exists"
+    expectedOutput: ["torrents.db exists"]
+    excludedOutput: ["(?i)driver not loaded", "can not load requested driver"]
     exitCode: 0
 
   - name: "./entrypoint.sh qbittorrent-nox --daemon"
