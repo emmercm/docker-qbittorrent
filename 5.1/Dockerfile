@@ -28,9 +28,9 @@ RUN git clone --branch "$( \
         sed 's/^v//i' | \
         # Make sure patch version exists
         sed 's/^\([0-9]\+\.[0-9]\+\)\([^0-9.].\+\)/\1.0\2/' | \
-        # Get the right version
+        # Get the right version, excluding pre-releases such as "5.3.0rc1" (which version-sort after "5.3.0")
         sort --version-sort --key=1,1 | \
-        grep "^${VERSION}" | \
+        grep "^${VERSION}\(\.[0-9]\+\)* " | \
         tail -1 | \
         awk '{print $2}' \
     )" --depth 1 https://github.com/qbittorrent/qBittorrent.git
@@ -76,8 +76,9 @@ FROM emmercm/libtorrent:2.0@sha256:68c6e62adbd8237ed70daf4004f4400ad840cac174f9d
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 
 # Install container and entrypoint dependencies, make directories, and symlink them for quality of life
+#   qt6-qtbase-sqlite: qBittorrent v4.4+ can store resume data in SQLite, and fails to start without the QSQLITE driver
 # hadolint ignore=DL3018
-RUN apk add --no-cache qt6-qtbase curl dumb-init tzdata && \
+RUN apk add --no-cache qt6-qtbase qt6-qtbase-sqlite curl dumb-init tzdata && \
     mkdir -p ~/.config/qBittorrent ~/.local/share/qBittorrent /downloads /incomplete && \
     ln -s ~/.config/qBittorrent /config && \
     ln -s ~/.local/share/qBittorrent /data
